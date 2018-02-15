@@ -42,12 +42,16 @@ export default class PeriodicTable extends Component {
           friction: 5
         }).start();
       }
-     },
+
+     }
+     isDropArea(gesture) {
+    return gesture.moveY < 200;
+  }
+
 
         onPanResponderMove: Animated.event([
           null, { dx: this.state.pan.x, dy: this.state.pan.y }
         ])
-
 
       });
         // adjusting delta value

@@ -24,7 +24,6 @@ export default class Screen extends Component {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flexDirection:'column-reverse',
   flex: 1 },
   ballContainer: {
     height:200
