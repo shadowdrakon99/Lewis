@@ -6,7 +6,7 @@ import React, { Component } from "react";
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body {
-  margin: 0;
+  margin: 0 ;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -20,9 +20,9 @@ body {
   display: block;
   color: #f2f2f2;
   text-align: center;
-  padding: 14px 16px;
+  padding: '14px' '16px';
   text-decoration: none;
-  font-size: 17px;
+  font-size: '17px';
 }
 
 .topbar a:hover {
@@ -31,7 +31,7 @@ body {
 }
 
 .active {
-  background-color: #4CAF50;
+  background-color: '#4CAF50';
   color: white;
 }
 
@@ -39,7 +39,7 @@ body {
   display: none;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: '600px') {
   .topnav a:not(:first-child) {display: none;}
   .topnav a.icon {
     float: right;
@@ -47,7 +47,7 @@ body {
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: '600px') {
   .topnav.responsive {position: relative;}
   .topnav.responsive .icon {
     position: absolute;
