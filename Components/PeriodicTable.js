@@ -1,19 +1,24 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, PanResponder, Animated,  } from "react-native";
+import { StyleSheet, View, Text, PanResponder, Animated, Dimensions } from "react-native";
 
 class PeriodicTable extends Component {
   constructor(props) {
     super(props);
-
+    let { height, width } = Dimensions.get('window');
     this.state = {
       showPeriodicTable: true,
       dropAreaValues: null,
       pan: new Animated.ValueXY(),
-      opacity: new Animated.Value(1)
+      opacity: new Animated.Value(1),
+      height: height,
+      width: width,
     };
+    this.isDropArea = this.isDropArea.bind(this)
   }
 
   componentWillMount() {
+
+
     this._val = { x:0, y:0 }
     this.state.pan.addListener((value) => this._val = value);
 
@@ -45,7 +50,7 @@ class PeriodicTable extends Component {
   }
 
   isDropArea(gesture) {
-    return gesture.moveY < 200;
+    return gesture.moveY > this.state.height-200;
   }
 
   render() {
@@ -78,9 +83,7 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <View style={styles.dropZone}>
-          <Text style={styles.text}>Drop them here!</Text>
-        </View>
+
         <View style={styles.ballContainer} />
         <View style={styles.row}>
           <PeriodicTable/>
@@ -88,11 +91,14 @@ export default class App extends Component {
           <PeriodicTable />
           <PeriodicTable />
           <PeriodicTable />
-          <PeriodicTable/>
           <PeriodicTable />
           <PeriodicTable />
           <PeriodicTable />
           <PeriodicTable />
+          <PeriodicTable />
+        </View>
+        <View style={styles.dropZone}>
+          <Text style={styles.text}>Drop them here!</Text>
         </View>
       </View>
     );
@@ -102,10 +108,9 @@ export default class App extends Component {
 let CIRCLE_RADIUS = 20;
 const styles = StyleSheet.create({
   mainContainer: {
-    flex:5
+    flex:1
   },
   ballContainer: {
-
     height:100,
     width:1,
   },
@@ -117,7 +122,9 @@ const styles = StyleSheet.create({
 
   },
   row: {
-    flexDirection: "row"
+    flex:1,
+    flexDirection: "row",
+    flexWrap:'wrap',
   },
   dropZone: {
     height: 200,
