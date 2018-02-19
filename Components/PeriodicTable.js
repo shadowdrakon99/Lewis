@@ -1,78 +1,135 @@
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  View,
-  PanResponder,
-  Animated
-} from "react-native";
+import { StyleSheet, View, Text, PanResponder, Animated,  } from "react-native";
 
-export default class PeriodicTable extends Component {
-  constructor() {
-    super();
+class PeriodicTable extends Component {
+  constructor(props) {
+    super(props);
+
     this.state = {
-      showDraggable: true,
+      showPeriodicTable: true,
       dropAreaValues: null,
       pan: new Animated.ValueXY(),
       opacity: new Animated.Value(1)
-
     };
   }
 
+  componentWillMount() {
+    this._val = { x:0, y:0 }
+    this.state.pan.addListener((value) => this._val = value);
 
-    componentWillMount() {
-      // Add a listener for the delta value change
-      this._val = { x:0, y:0 }
-      this.state.pan.addListener((value) => this._val = value);
-      // Initialize PanResponder with move handling
-      this.panResponder = PanResponder.create({
+    this.panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gesture) => true,
-        onPanResponderRelease: (e, gesture) => {
-          if (this.isDropArea(gesture)) {
-          Animated.timing(this.state.opacity, {
-          toValue: 0,
-          duration: 1000
-        }).start(() =>
-          this.setState({
-             showDraggable: false
+        onPanResponderGrant: (e, gesture) => {
+          this.state.pan.setOffset({
+            x: this._val.x,
+            y:this._val.y
           })
-        );
-      } else {
-        Animated.spring(this.state.pan, {
-          toValue: { x: 0, y: 0 },
-          friction: 5
-        }).start();
-      }
-     },
-
+          this.state.pan.setValue({ x:0, y:0})
+        },
         onPanResponderMove: Animated.event([
           null, { dx: this.state.pan.x, dy: this.state.pan.y }
-        ])
-
-
+        ]),
+        onPanResponderRelease: (e, gesture) => {
+          if (this.isDropArea(gesture)) {
+            Animated.timing(this.state.opacity, {
+              toValue: 0,
+              duration: 1000
+            }).start(() =>
+              this.setState({
+                showPeriodicTable: false
+              })
+            );
+          }
+        }
       });
-        // adjusting delta value
-      this.state.pan.setValue({ x:0, y:0})
-    }
+  }
+
+  isDropArea(gesture) {
+    return gesture.moveY < 200;
+  }
 
   render() {
+    return (
+      <View style={{ width: "20%", alignItems: "center" }}>
+        {this.renderPeriodicTable()}
+      </View>
+    );
+  }
+
+  renderPeriodicTable() {
     const panStyle = {
       transform: this.state.pan.getTranslateTransform()
     }
+    if (this.state.showPeriodicTable) {
+      return (
+        <View style={{ position: "absolute" }}>
+          <Animated.View
+            {...this.panResponder.panHandlers}
+            style={[panStyle, styles.circle, {opacity:this.state.opacity}]}
+          ><Text>HCN</Text></Animated.View>
+        </View>
+      );
+    }
+  }
+}
+
+
+export default class App extends Component {
+  render() {
     return (
-        <Animated.View
-          {...this.panResponder.panHandlers}
-          style={[panStyle, styles.circle]}
-        />
+      <View style={styles.mainContainer}>
+        <View style={styles.dropZone}>
+          <Text style={styles.text}>Drop them here!</Text>
+        </View>
+        <View style={styles.ballContainer} />
+        <View style={styles.row}>
+          <PeriodicTable/>
+          <PeriodicTable />
+          <PeriodicTable />
+          <PeriodicTable />
+          <PeriodicTable />
+          <PeriodicTable/>
+          <PeriodicTable />
+          <PeriodicTable />
+          <PeriodicTable />
+          <PeriodicTable />
+        </View>
+      </View>
     );
   }
 }
 
-let CIRCLE_RADIUS = 10;
-let styles = StyleSheet.create({
+let CIRCLE_RADIUS = 20;
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex:5
+  },
+  ballContainer: {
+
+    height:100,
+    width:1,
+  },
   circle: {
-    backgroundColor: "skyblue",
+    backgroundColor: "white",
     width: CIRCLE_RADIUS * 2,
     height: CIRCLE_RADIUS * 2,
-    borderRadius: CIRCLE_RADIUS
+
+
+  },
+  row: {
+    flexDirection: "row"
+  },
+  dropZone: {
+    height: 200,
+    backgroundColor: "#00334d"
+  },
+  text: {
+    marginTop: 25,
+    marginLeft: 5,
+    marginRight: 5,
+    textAlign: "center",
+    color: "#fff",
+    fontSize: 25,
+    fontWeight: "bold"
   }
 });
