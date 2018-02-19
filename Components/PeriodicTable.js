@@ -66,7 +66,7 @@ class PeriodicTable extends Component {
           <Animated.View
             {...this.panResponder.panHandlers}
             style={[panStyle, styles.circle, {opacity:this.state.opacity}]}
-          />
+          ><Text>HCN</Text></Animated.View>
         </View>
       );
     }
@@ -83,7 +83,12 @@ export default class App extends Component {
         </View>
         <View style={styles.ballContainer} />
         <View style={styles.row}>
+          <PeriodicTable/>
           <PeriodicTable />
+          <PeriodicTable />
+          <PeriodicTable />
+          <PeriodicTable />
+          <PeriodicTable/>
           <PeriodicTable />
           <PeriodicTable />
           <PeriodicTable />
@@ -94,19 +99,22 @@ export default class App extends Component {
   }
 }
 
-let CIRCLE_RADIUS = 30;
+let CIRCLE_RADIUS = 20;
 const styles = StyleSheet.create({
   mainContainer: {
-    flex: 1
+    flex:5
   },
   ballContainer: {
-    height:200
+
+    height:100,
+    width:1,
   },
   circle: {
-    backgroundColor: "skyblue",
+    backgroundColor: "white",
     width: CIRCLE_RADIUS * 2,
     height: CIRCLE_RADIUS * 2,
-    borderRadius: CIRCLE_RADIUS
+
+
   },
   row: {
     flexDirection: "row"
