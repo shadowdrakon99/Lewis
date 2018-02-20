@@ -18,7 +18,6 @@ class PeriodicTable extends Component {
 
   componentWillMount() {
 
-
     this._val = { x:0, y:0 }
     this.state.pan.addListener((value) => this._val = value);
 
@@ -55,7 +54,7 @@ class PeriodicTable extends Component {
 
   render() {
     return (
-      <View style={{ width: "20%", alignItems: "center" }}>
+      <View style={{ alignItems: "center", width:"20%" }}>
         {this.renderPeriodicTable()}
       </View>
     );
@@ -83,10 +82,9 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-
         <View style={styles.ballContainer} />
         <View style={styles.row}>
-          <PeriodicTable/>
+          <PeriodicTable />
           <PeriodicTable />
           <PeriodicTable />
           <PeriodicTable />
@@ -97,8 +95,8 @@ export default class App extends Component {
           <PeriodicTable />
           <PeriodicTable />
         </View>
-        <View style={styles.dropZone}>
-          <Text style={styles.text}>Drop them here!</Text>
+          <View style={styles.dropZone}>
+            <Text style={styles.text}>Drop them here!</Text>
         </View>
       </View>
     );
@@ -118,8 +116,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: CIRCLE_RADIUS * 2,
     height: CIRCLE_RADIUS * 2,
-
-
   },
   row: {
     flex:1,
