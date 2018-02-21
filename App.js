@@ -5,6 +5,7 @@ import  DragAndDrop from './Components/DragAndDrop';
 import Header from './Components/header'
 import { Container } from 'native-base';
 import Modal from "./Components/Modal"
+import Trashcan from './Components/Trashcan'
 //import TopBar from './Components/PeriodicTable'
 
 
@@ -36,6 +37,7 @@ export default class  App extends React.Component {
       <Modal openModal = {this.openModal.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
         <Header onMenuPress = {this.openModal.bind(this)}/>
         <DragAndDrop/>
+        <Trashcan style = {{alignItems:'flex-end'}}/>
         </Container>
       </View>
 

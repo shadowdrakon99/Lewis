@@ -147,7 +147,7 @@ class Lewis extends Component { // TODO: Holds logic for displaying bonds and fr
     return (
       <View>
         <Text>{this.props.element.name}</Text>
-      
+
       </View>
     )
   }
