@@ -109,8 +109,9 @@ const styles = StyleSheet.create({
     flex:1
   },
   ballContainer: {
-    height:100,
+    height:0,
     width:1,
+    paddingTop: 10
   },
   circle: {
     backgroundColor: "white",
