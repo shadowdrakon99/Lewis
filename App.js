@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native';
-import  PeriodicTable from './Components/PeriodicTable';
+import  DragAndDrop from './Components/DragAndDrop';
 import Header from './Components/header'
 import { Container } from 'native-base';
 //import TopBar from './Components/PeriodicTable'
@@ -16,7 +16,7 @@ export default class  App extends React.Component {
       <View style={styles.container}>
       <Container>
         <Header />
-        <PeriodicTable/>
+        <DragAndDrop/>
         </Container>
       </View>
 

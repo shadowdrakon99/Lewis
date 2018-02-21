@@ -1,12 +1,16 @@
 import React, { Component } from "react";
-import { StyleSheet, View, Text, PanResponder, Animated, Dimensions } from "react-native";
+import { StyleSheet, View, Text, PanResponder, Animated, Dimensions, Image } from "react-native";
 
-class PeriodicTable extends Component {
+
+const elements = [{ atomicNumber: 6, name: 'C', vale: 4}, { atomicNumber: 6, name: 'O', vale: 6},
+{ atomicNumber: 1, name: 'H', vale: 1}]
+
+class DragAndDrop extends Component {
   constructor(props) {
     super(props);
     let { height, width } = Dimensions.get('window');
     this.state = {
-      showPeriodicTable: true,
+      showDragAndDrop: true,
       dropAreaValues: null,
       pan: new Animated.ValueXY(),
       opacity: new Animated.Value(1),
@@ -40,7 +44,7 @@ class PeriodicTable extends Component {
               duration: 1000
             }).start(() =>
               this.setState({
-                showPeriodicTable: false
+                showDragAndDrop: false
               })
             );
           }
@@ -55,22 +59,22 @@ class PeriodicTable extends Component {
   render() {
     return (
       <View style={{ alignItems: "center", width:"20%" }}>
-        {this.renderPeriodicTable()}
+        {this.renderDragAndDrop()}
       </View>
     );
   }
 
-  renderPeriodicTable() {
+  renderDragAndDrop() {
     const panStyle = {
       transform: this.state.pan.getTranslateTransform()
     }
-    if (this.state.showPeriodicTable) {
+    if (this.state.showDragAndDrop) {
       return (
         <View style={{ position: "absolute" }}>
           <Animated.View
             {...this.panResponder.panHandlers}
             style={[panStyle, styles.circle, {opacity:this.state.opacity}]}
-          ><Text>HCN</Text></Animated.View>
+          >{this.props.children}</Animated.View>
         </View>
       );
     }
@@ -84,20 +88,17 @@ export default class App extends Component {
       <View style={styles.mainContainer}>
         <View style={styles.ballContainer} />
         <View style={styles.row}>
-          <PeriodicTable />
-          <PeriodicTable />
-          <PeriodicTable />
-          <PeriodicTable />
-          <PeriodicTable />
-          <PeriodicTable />
-          <PeriodicTable />
-          <PeriodicTable />
-          <PeriodicTable />
-          <PeriodicTable />
+          <DragAndDrop ><Lewis element={elements[0]} /></DragAndDrop>
+          <DragAndDrop ><Lewis element={elements[2]} /></DragAndDrop>
+          <DragAndDrop ><Lewis element={elements[1]} /></DragAndDrop>
+          <DragAndDrop ><Lewis element={elements[0]} /></DragAndDrop>
+          <DragAndDrop ><Lewis element={elements[1]} /></DragAndDrop>
+          <DragAndDrop ><Lewis element={elements[0]} /></DragAndDrop>
+          <DragAndDrop ><Lewis element={elements[2]} /></DragAndDrop>
+          <DragAndDrop ><Lewis element={elements[0]} /></DragAndDrop>
+
         </View>
-          <View style={styles.dropZone}>
-            <Text style={styles.text}>Drop them here!</Text>
-        </View>
+
       </View>
     );
   }
@@ -137,3 +138,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   }
 });
+
+class Lewis extends Component { // TODO: Holds logic for displaying bonds and free electron pairs
+  render() {
+    // use conditional rendering
+    // say if the box is outside the header region then we'll render a element with electrons
+    // else we render only the letter with the element symbol
+    return (
+      <View>
+        <Text>{this.props.element.name}</Text>
+      
+      </View>
+    )
+  }
+}
