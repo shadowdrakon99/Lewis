@@ -5,7 +5,7 @@ import { StyleSheet, View, Text, PanResponder, Animated, Dimensions, Image } fro
 const elements = [{ atomicNumber: 6, name: 'C', vale: 4}, { atomicNumber: 6, name: 'O', vale: 6},
 { atomicNumber: 1, name: 'H', vale: 1}]
 
-class DragAndDrop extends Component {
+export default class DragAndDrop extends Component {
   constructor(props) {
     super(props);
     let { height, width } = Dimensions.get('window');
@@ -53,13 +53,20 @@ class DragAndDrop extends Component {
   }
 
   isDropArea(gesture) {
-    return gesture.moveY > this.state.height-200;
+
+
+    return gesture.moveY > this.state.height-55 && gesture.moveX > this.state.width-55;
   }
 
   render() {
     return (
+      <View style={styles.mainContainer}>
+        <View style={styles.ballContainer} />
+        <View style={styles.row}>
       <View style={{ alignItems: "center", width:"20%" }}>
         {this.renderDragAndDrop()}
+      </View>
+      </View>
       </View>
     );
   }
@@ -78,29 +85,6 @@ class DragAndDrop extends Component {
         </View>
       );
     }
-  }
-}
-
-
-export default class App extends Component {
-  render() {
-    return (
-      <View style={styles.mainContainer}>
-        <View style={styles.ballContainer} />
-        <View style={styles.row}>
-          <DragAndDrop ><Lewis element={elements[0]} /></DragAndDrop>
-          <DragAndDrop ><Lewis element={elements[2]} /></DragAndDrop>
-          <DragAndDrop ><Lewis element={elements[1]} /></DragAndDrop>
-          <DragAndDrop ><Lewis element={elements[0]} /></DragAndDrop>
-          <DragAndDrop ><Lewis element={elements[1]} /></DragAndDrop>
-          <DragAndDrop ><Lewis element={elements[0]} /></DragAndDrop>
-          <DragAndDrop ><Lewis element={elements[2]} /></DragAndDrop>
-          <DragAndDrop ><Lewis element={elements[0]} /></DragAndDrop>
-
-        </View>
-
-      </View>
-    );
   }
 }
 
@@ -138,17 +122,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   }
 });
-
-class Lewis extends Component { // TODO: Holds logic for displaying bonds and free electron pairs
-  render() {
-    // use conditional rendering
-    // say if the box is outside the header region then we'll render a element with electrons
-    // else we render only the letter with the element symbol
-    return (
-      <View>
-        <Text>{this.props.element.name}</Text>
-
-      </View>
-    )
-  }
-}

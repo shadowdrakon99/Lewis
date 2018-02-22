@@ -6,6 +6,7 @@ import Header from './Components/header'
 import { Container } from 'native-base';
 import Modal from "./Components/Modal"
 import Trashcan from './Components/Trashcan'
+import Lewis from './Components/Lewis'
 //import TopBar from './Components/PeriodicTable'
 
 
@@ -32,25 +33,18 @@ export default class  App extends React.Component {
   render() {
     return (
 
-      <View style={styles.container}>
+
       <Container>
       <Modal openModal = {this.openModal.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
         <Header onMenuPress = {this.openModal.bind(this)}/>
-        <DragAndDrop/>
+        <DragAndDrop>
+          <Lewis side={50} symbol="B" left={1} right={2} top={"bond"} />
+        </DragAndDrop>
         <Trashcan style = {{alignItems:'flex-end'}}/>
         </Container>
-      </View>
+
 
 
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
