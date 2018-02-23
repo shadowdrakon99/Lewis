@@ -53,19 +53,13 @@ export default class DragAndDrop extends Component {
   }
 
   isDropArea(gesture) {
-
-
     return gesture.moveY > this.state.height-55 && gesture.moveX > this.state.width-55;
   }
 
   render() {
     return (
-      <View style={styles.mainContainer}>
-      <View style={styles.row}>
       <View style={{ alignItems: "center", width:"20%" }}>
         {this.renderDragAndDrop()}
-      </View>
-      </View>
       </View>
     );
   }
@@ -80,8 +74,8 @@ export default class DragAndDrop extends Component {
           <Animated.View
             {...this.panResponder.panHandlers}
             style={[panStyle, styles.circle, {opacity:this.state.opacity}]}>
-              {this.props.children}
-            </Animated.View>
+            {this.props.children}
+          </Animated.View>
         </View>
       );
     }
@@ -90,34 +84,8 @@ export default class DragAndDrop extends Component {
 
 let CIRCLE_RADIUS = 25;
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex:1
-  },
-  ballContainer: {
-    height:0,
-    width:1,
-    paddingTop: 10
-  },
   circle: {
     width: CIRCLE_RADIUS * 2,
     height: CIRCLE_RADIUS * 2,
   },
-  row: {
-    flex:1,
-    flexDirection: "row",
-    flexWrap:'wrap',
-  },
-  dropZone: {
-    height: 200,
-    backgroundColor: "#00334d"
-  },
-  text: {
-    marginTop: 25,
-    marginLeft: 5,
-    marginRight: 5,
-    textAlign: "center",
-    color: "#fff",
-    fontSize: 25,
-    fontWeight: "bold"
-  }
 });
