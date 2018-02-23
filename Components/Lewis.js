@@ -6,12 +6,12 @@ export default class Lewis extends Component {
 
   constructor(props) {
     super(props)
-
     const { vale, left, right, top, bottom } = props
+    const bonds = [top, right, bottom, left]
 
-    this.state={
-      dots:[0,0,0,0], //top right bottom left
-      bonds:[top, right, bottom, left],
+    this.state = {
+      dots:this.valeToDots(vale,bonds),
+      bonds:bonds,
       vale:vale
     }
   }
@@ -37,11 +37,7 @@ export default class Lewis extends Component {
     style:PropTypes.oneOfType([PropTypes.array, PropTypes.object]) // style of container
   }
 
-  componentDidMount() {
-    this.updateDots()
-  }
-
-  updateDots() {
+  updateDots() { // TODO: use this to update dots onPressDots!
     const { vale, bonds:[top, right, bottom, left] } = this.state
     this.setState({
       bonds:[top, right, bottom, left],
@@ -50,7 +46,7 @@ export default class Lewis extends Component {
   }
 
   valeToDots(vale, bonds) {
-      let dots = this.state.dots.slice()
+      let dots = [0,0,0,0]
       const sumBonds = bonds.reduce((a,b)=>a+b, 0)
       const numLone = vale - sumBonds
       let skip = 0
