@@ -35,15 +35,15 @@ class App extends Component {
     this.setState({modalVisible:false});
   }
 
-  renderAtom(element) {
+  spawnAtom({symbol, vale}) {
     const newState = this.state.atoms.slice()
-    newState.push(<DragAndDrop><Lewis side={50} symbol={element.symbol} vale={element.vale}/></DragAndDrop>)
+    newState.push({symbol, vale})
     this.setState({atoms:newState})
   }
 
   renderButtons() {
     return elements.map( (e,k) =>
-      <Button style={styles.elementButton} onPress={()=>this.renderAtom(e)} title={e.symbol} key={k}/>
+      <Button style={styles.elementButton} onPress={()=>this.spawnAtom(e)} title={e.symbol} key={k}/>
     )
   }
 
@@ -54,10 +54,12 @@ class App extends Component {
       <Container style={{marginTop:StatusBar.currentHeight}}>
       <Modal openModal = {this.openModal.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
         <Header onMenuPress = {this.openModal.bind(this)}/>
-        <View style={{flexDirection:'column', flex:1, backgroundColor:'blue'}}>
+        <View style={{flexDirection:'column', flex:1 }}>
           {this.renderButtons()}
         </View>
-        {this.state.atoms}
+        {this.state.atoms.map(({symbol, vale},k)=>(
+          <DragAndDrop key={k}><Lewis side={50} symbol={symbol} vale={vale}/></DragAndDrop>
+        ))}
         <Trashcan style = {{alignItems:'flex-end'}}/>
         </Container>
     );

@@ -88,7 +88,7 @@ export default class DragAndDrop extends Component {
   }
 }
 
-let CIRCLE_RADIUS = 50;
+let CIRCLE_RADIUS = 25;
 const styles = StyleSheet.create({
   mainContainer: {
     flex:1
@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     paddingTop: 10
   },
   circle: {
-    backgroundColor: "white",
     width: CIRCLE_RADIUS * 2,
     height: CIRCLE_RADIUS * 2,
   },
