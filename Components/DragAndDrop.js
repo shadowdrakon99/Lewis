@@ -61,8 +61,7 @@ export default class DragAndDrop extends Component {
   render() {
     return (
       <View style={styles.mainContainer}>
-        <View style={styles.ballContainer} />
-        <View style={styles.row}>
+      <View style={styles.row}>
       <View style={{ alignItems: "center", width:"20%" }}>
         {this.renderDragAndDrop()}
       </View>
@@ -80,15 +79,16 @@ export default class DragAndDrop extends Component {
         <View style={{ position: "absolute" }}>
           <Animated.View
             {...this.panResponder.panHandlers}
-            style={[panStyle, styles.circle, {opacity:this.state.opacity}]}
-          >{this.props.children}</Animated.View>
+            style={[panStyle, styles.circle, {opacity:this.state.opacity}]}>
+              {this.props.children}
+            </Animated.View>
         </View>
       );
     }
   }
 }
 
-let CIRCLE_RADIUS = 20;
+let CIRCLE_RADIUS = 50;
 const styles = StyleSheet.create({
   mainContainer: {
     flex:1
