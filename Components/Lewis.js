@@ -37,22 +37,23 @@ export default class Lewis extends Component {
     style:PropTypes.oneOfType([PropTypes.array, PropTypes.object]) // style of container
   }
 
-  updateDots() { // TODO: use this to update dots onPressDots!
-    const { vale, bonds:[top, right, bottom, left] } = this.state
+  updateDots(newBonds) {
+    const { vale } = this.state
     this.setState({
-      bonds:[top, right, bottom, left],
-      dots: this.valeToDots(vale, [top, right, bottom, left])
+      bonds: newBonds,
+      dots: this.valeToDots(vale, newBonds)
     })
   }
 
-  valeToDots(vale, bonds) {
+  valeToDots(vale, bonds) { //BUG: for some reason the array indicies with bonds still get assigned values > 0...
       let dots = [0,0,0,0]
       const sumBonds = bonds.reduce((a,b)=>a+b, 0)
       const numLone = vale - sumBonds
       let skip = 0
       for(let i=0; i<numLone; i++) {
-        if(bonds[(i+skip) % 4]){skip = skip + 1; i--}
-        dots[(i+skip) % 4] = dots[(i+skip) % 4] + 1
+        if(bonds[(i+skip) % 4]) {skip = skip + 1; i--}
+        if(!bonds.includes(0)) break;
+        if(dots[(i+skip) % 4]<2) dots[(i+skip) % 4] = dots[(i+skip) % 4] + 1
       }
       return dots
   }
@@ -60,8 +61,7 @@ export default class Lewis extends Component {
   onPressDots(index) {
     let newState = this.state.bonds.slice()
     newState[index] = (newState[index]<3) ? newState[index]+1 : 0
-    this.setState({bonds:newState})
-    //BUG: can't do a updateDots call here... to update dots. Looks like state doesn't update fast enough?
+    this.updateDots(newState)
   }
 
   render() {
