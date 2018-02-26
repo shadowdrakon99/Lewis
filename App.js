@@ -54,7 +54,7 @@ class App extends Component {
       <Container style={{marginTop:StatusBar.currentHeight}}>
       <Modal openModal = {this.openModal.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
         <Header onMenuPress = {this.openModal.bind(this)}/>
-        <View style={{flexDirection:'column', flex:1 }}>
+        <View style={{flexDirection:'row', justifyContent: 'space-between', flex:1 }}>
           {this.renderButtons()}
         </View>
         {this.state.atoms.map(({symbol, vale},k)=>(
