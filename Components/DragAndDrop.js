@@ -11,7 +11,6 @@ export default class DragAndDrop extends Component {
     let { height, width } = Dimensions.get('window');
     this.state = {
       showDragAndDrop: true,
-      dropAreaValues: null,
       pan: new Animated.ValueXY(),
       opacity: new Animated.Value(1),
       height: height,
