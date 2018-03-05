@@ -57,7 +57,7 @@ export default class DragAndDrop extends Component {
 
   render() {
     return (
-      <View style={{ alignItems: "center", width:"20%" }}>
+      <View style={{ alignItems: "center"}}>
         {this.renderDragAndDrop()}
       </View>
     );
