@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, StatusBar, Animated } from 'react-native';
 import Canvas from './Components/2DCanvas';
 import Header from './Components/header'
-import { Container } from 'native-base';
+import { Container, Icon } from 'native-base';
 import Modal from "./Components/Modal"
-import Trashcan from './Components/Trashcan'
+import IBox from './Components/IconBox'
 import Expo from 'expo'
 import Tape from './Components/TapeMeasure'
 
@@ -69,15 +69,19 @@ class App extends Component {
   } // IDEA: we could actually just add this into the makeBond function somehow? or nah....
 
   onPressDomain(domain, atom) {
-    let newState = this.state.atoms.slice()
-    let pressedAtom = { ...newState[atom] }
-    // let bondedAtom = this.state.bonds.filter(b=>)
-      let newBonds = pressedAtom.bonds.slice()
+    const bond = this.state.bonds.filter(b=>b[domain]===atom)[0]
+    if(!bond) return
+    let newAtoms = this.state.atoms.slice()
+    for ( domain in bond ) {
+      if(!bond.hasOwnProperty(domain)) continue
+      const atom = {...newAtoms[bond[domain]]}
+      let newBonds = atom.bonds.slice()
+      newBonds[domain] = (atom.bonds[domain]<3) ? atom.bonds[domain] + 1 : 0
+      newAtoms[bond[domain]].bonds = newBonds
+    }
+    this.setState({atoms:newAtoms, })
 
-    // bonds[domain] = addBond(domain, bonds)
-    // newState[atom].bonds = bonds
-    // this.setState({atoms:newState})
-  } //TODO: update all bonded atoms instead of just the atom pressed
+  }
   // TODO: need a check to make sure we aren't trying to form a bond with something that already has 3 bonds
 
   getBondedAtoms() {
@@ -125,7 +129,8 @@ class App extends Component {
           {this.renderButtons()}
         </View>
         <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)} onPressDomain={this.onPressDomain.bind(this)} deleteAtom={this.deleteAtom.bind(this)}/>
-        <Trashcan style = {{ backgroundColor:'red' }}/>
+        <IBox style={{ backgroundColor:'red', position:'absolute',  bottom:0,  right:0, }}><Icon name="trash"/></IBox>
+        <IBox style={{ backgroundColor:'steelblue', position:'absolute',  bottom:0,  left:0, }}><Icon name="ionic"/></IBox>
       </Container>
     );
   }

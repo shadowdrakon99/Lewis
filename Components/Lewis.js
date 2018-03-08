@@ -126,7 +126,7 @@ class Dots extends Component {
 
     return (
         <View style={[style, containerStyle]}>
-          <TouchableWithoutFeedback onPress={onPress} >
+          <TouchableWithoutFeedback onPress={onPress} style={{ flex:1 }} >
             <View style={dotStyle} >
                {this.renderDots(ins,bonded)}
             </View>
