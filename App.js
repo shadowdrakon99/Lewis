@@ -129,7 +129,7 @@ class App extends Component {
           {this.renderButtons()}
         </View>
         <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)} onPressDomain={this.onPressDomain.bind(this)} deleteAtom={this.deleteAtom.bind(this)}/>
-        <IBox style={{ backgroundColor:'red', position:'absolute',  bottom:0,  right:0, }}><Icon name="trash"/></IBox>
+        <IBox style={{ backgroundColor:'tomato', position:'absolute',  bottom:0,  right:0, }}><Icon name="trash"/></IBox>
         <IBox style={{ backgroundColor:'steelblue', position:'absolute',  bottom:0,  left:0, }}><Icon name="ionic"/></IBox>
       </Container>
     );
