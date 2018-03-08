@@ -109,7 +109,7 @@ class Dots extends Component {
   renderDots(num, bonded) {
     let dots = []
     for(let i = 0; i<num; i++ ) {
-      dots = [...dots, (bonded?<Text key={i}>&#9475;</Text>:<Text key={i}>&#8226;</Text>)]
+      dots = [...dots, (bonded?<Text key={i}>&#124;</Text>:<Text key={i}>&#8226;</Text>)]
     }
     return dots
   } // IDEA: if I can take out the padding in the side of the Text, &#9475; would be perfect to replace "|" b/c much higher
