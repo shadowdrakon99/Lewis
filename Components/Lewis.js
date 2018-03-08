@@ -45,6 +45,7 @@ export default class Lewis extends Component {
         if(!bonds.includes(0)) break;
         if(dots[(i+skip) % 4]<2) dots[(i+skip) % 4] = dots[(i+skip) % 4] + 1
       }
+      // TODO: need some basic bond predicting logic...after bond, lone pair electrons are always paired even when shell isn't full?
       return dots
   }
 
@@ -108,10 +109,10 @@ class Dots extends Component {
   renderDots(num, bonded) {
     let dots = []
     for(let i = 0; i<num; i++ ) {
-      dots = [...dots, (bonded?<Text key={i}>&#124;</Text>:<Text key={i}>&#8226;</Text>)]
+      dots = [...dots, (bonded?<Text key={i}>&#9475;</Text>:<Text key={i}>&#8226;</Text>)]
     }
     return dots
-  }
+  } // IDEA: if I can take out the padding in the side of the Text, &#9475; would be perfect to replace "|" b/c much higher
 
   render() {
 
