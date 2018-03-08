@@ -27,13 +27,13 @@ export default class extends Component {
   makeBondTrig(index, zone, bounds) {
     switch(zone) {
       case 'top':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({0:bonded, 2:index})}
+        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({2:bonded, 0:index})}
         break;
       case 'bottom':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({0:index, 2:bonded})}
+        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({2:index, 0:bonded})}
         break;
       case 'left':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({3:bonded, 1:index})}
+        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({1:bonded, 3:index})}
         break;
       case 'right':
         return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({1:index, 3:bonded})}

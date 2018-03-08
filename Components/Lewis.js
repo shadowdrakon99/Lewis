@@ -116,12 +116,12 @@ class Dots extends Component {
   render() {
 
     const { vertical, ins, style, bonded, onPress } = this.props
-    const containerStyle = { flex:2, justifyContent:'center', alignItems:'center' }
+    const containerStyle = { flex:2, justifyContent:'center', alignItems:'center', }
     const dotStyle = {
       justifyContent:'space-around',
       alignItems:'center',
       flexDirection:'row',
-      transform: vertical?[{ rotate: '90deg'}]:[]
+      transform: vertical?[{ rotate: '90deg'}]:[],
     }
 
     return (

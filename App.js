@@ -43,9 +43,17 @@ class App extends Component {
   }
 
   makeBond(bond) {
-    const newState = this.state.bonds.slice()
-    newState.push(bond)
-    this.setState({bonds:newState})
+    let newBonds = this.state.bonds.slice()
+    newBonds.push(bond)
+    let newBondedAtoms = this.state.atoms.slice()
+    for( domain in bond ) {
+      if(!bond.hasOwnProperty(domain)) continue
+      const atom = {...newBondedAtoms[bond[domain]]}
+      let newBonds = atom.bonds.slice()
+      newBonds[domain] = 1
+      newBondedAtoms[bond[domain]].bonds = newBonds
+    }
+    this.setState({bonds:newBonds, atoms:newBondedAtoms})
   }
 
   renderButtons() {

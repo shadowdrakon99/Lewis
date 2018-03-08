@@ -23,7 +23,7 @@ export default class extends Component {
 
     // IDEA: when deleting an element, set that draggable atom to null so that we don't lose the array index
 
-    const { pan, bondedDomains } = atoms[index]
+    const { pan, bonds:bondedDomains } = atoms[index]
 
     let bonded = this._getCluster(index)
 
