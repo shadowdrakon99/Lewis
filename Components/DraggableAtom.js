@@ -19,7 +19,7 @@ export default class extends Component {
 
   render() {
 
-    const { symbol, vale, atoms, index, zones, onUpdate, bonds, onPressDomain } = this.props;
+    const { symbol, vale, atoms, index, zones, onUpdate, bonds, onPressDomain, trashZone } = this.props;
 
     // IDEA: when deleting an element, set that draggable atom to null so that we don't lose the array index
 
@@ -37,11 +37,9 @@ export default class extends Component {
     while (bonded.length>clusterSize)
 
     const triggers = zones.filter( ({index}) => bonded.indexOf(index)===-1 )
-    .map(v=>({...v, trigger:()=>v.trigger(index), }))
-    // TODO: make a callback to delete atoms (also add better index) and put the trasn functionality back
-    console.log("dragatomtrigs "+ triggers.length)
+    .map(v=>({...v, trigger:()=>v.trigger(index), })).concat([trashZone])
+
     const bondedPans = bonded.map(b=>atoms[b].pan)
-    // FIXME: atom at domain 3 will jump for some reason. I think bonded array doesn't always get everything?
 
     return (
       <Draggable pan={pan} onUpdate={onUpdate} triggers={triggers} bundled={bondedPans} >

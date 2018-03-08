@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Icon } from 'native-base'; // 0.19.0
-
-import "@expo/vector-icons"; // 6.3.1
+import { Icon } from 'native-base'; 
 
 export default class App extends Component {
 
-
-
   render() {
+
   let { style } = this.props
 
   let trashStyles = {
-    marginRight:20,
-    marginBottom:20,
+    height:50,
+    width:50,
+    justifyContent:'center',
+    alignItems:'center',
+    position:'absolute',
+    bottom:0,
+    right:0,
 
   }
 

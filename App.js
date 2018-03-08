@@ -25,6 +25,7 @@ class App extends Component {
       atoms:[],
       bonds:[]
     };
+    this._getCluster = this._getCluster.bind(this)
   }
 
   openModal() {
@@ -75,10 +76,37 @@ class App extends Component {
 
   }
 
+  _getCluster(index) {
+    return this.state.bonds.filter(b=>Object.values(b).indexOf(index)!==-1)
+      .reduce((ag, b)=>[...ag, ...Object.values(b)], [])
+      .concat([index])
+      .filter((v, i, s) => i===s.indexOf(v))
+  }
+
+  deleteAtom(index) {
+    let bonded = this._getCluster(index)
+    let clusterSize;
+    do {
+      clusterSize=bonded.length
+      bonded = bonded.map(this._getCluster)
+      .reduce((ag, v) => [...ag, ...v], [])
+      .filter((v, i, s) => i===s.indexOf(v))
+    }
+    while (bonded.length>clusterSize)
+
+    let atoms = this.state.atoms.slice()
+    let bonds = this.state.bonds.slice()
+    bonded.forEach(v=>{
+      atoms[v] = null
+      bonds = bonds.filter(b=>Object.values(b).indexOf(v)===-1)
+    })
+
+    this.setState({atoms, bonds})
+  }
+
   render() {
 
     let { atoms, bonds } = this.state
-
     return (
       <Container style={{marginTop:StatusBar.currentHeight}}>
       <Tape />
@@ -88,9 +116,8 @@ class App extends Component {
         <View style={{flexDirection:'row', justifyContent: 'space-between' }}>
           {this.renderButtons()}
         </View>
-
-        <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)} onPressDomain={this.onPressDomain.bind(this)}/>
-        <Trashcan style = {{position:'absolute', bottom:10, right:10}}/>
+        <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)} onPressDomain={this.onPressDomain.bind(this)} deleteAtom={this.deleteAtom.bind(this)}/>
+        <Trashcan style = {{ backgroundColor:'red' }}/>
       </Container>
     );
   }

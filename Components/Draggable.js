@@ -60,8 +60,6 @@ export default class extends Component {
         const triggered = this.getTriggers().filter(
           ({ bounds:{ upper,lower,left,right } })=> (y > upper) && (y < lower) && (x > left) && (x < right)
         ).map(t=>t.trigger)
-        console.log("triggers"+this.getTriggers.length)
-        console.log("triggered"+triggered.length)
         triggered.forEach(f=>f())
 
         onUpdate()
