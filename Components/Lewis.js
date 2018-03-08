@@ -6,12 +6,10 @@ export default class Lewis extends Component {
 
   constructor(props) {
     super(props)
-    const { vale, left, right, top, bottom } = props
-    const bonds = [top, right, bottom, left]
+    const { vale, bonds } = props
 
     this.state = {
       dots:this.valeToDots(vale,bonds),
-      bonds:bonds,
       vale:vale
     }
   }
@@ -20,29 +18,21 @@ export default class Lewis extends Component {
     side:50,
     vale:1,
     symbol:"H",
-    left:0,
-    right:0,
-    top:0,
-    bottom:0,
+    bonds:[0,0,0,0]
   }
 
   static propTypes = {
     side:PropTypes.number, // side length. should default to 50... if it doesn't this is a bug with Expo so just pass in 50 for this prop
     vale:PropTypes.number, // number of valence electrons. if this is set, it'll ignore left,right,top,bottom
     symbol:PropTypes.string, // Element symbol. Like Na, Mg, B, C, N, O, F, Ne ... defaults to H
-    left:PropTypes.number, // number of bonds left side
-    right:PropTypes.number, // number of bonds right side
-    top:PropTypes.number, // number of bonds top side
-    bottom:PropTypes.number, // number of bonds bottom side
-    style:PropTypes.oneOfType([PropTypes.array, PropTypes.object]) // style of container
+    bonds:PropTypes.arrayOf(PropTypes.number), // number of bonds on [ top, right, bottom, left ] sides
+    style:PropTypes.oneOfType([PropTypes.array, PropTypes.object]), // style of container
+    onPressDomain:PropTypes.func.isRequired,
   }
 
   updateDots(newBonds) {
     const { vale } = this.state
-    this.setState({
-      bonds: newBonds,
-      dots: this.valeToDots(vale, newBonds)
-    })
+    this.setState({ dots: this.valeToDots(vale, newBonds) })
   }
 
   valeToDots(vale, bonds) { //BUG: for some reason the array indicies with bonds still get assigned values > 0...
@@ -58,15 +48,13 @@ export default class Lewis extends Component {
       return dots
   }
 
-  onPressDots(index) {
-    let newState = this.state.bonds.slice()
-    newState[index] = (newState[index]<3) ? newState[index]+1 : 0
-    this.updateDots(newState)
+  componentWillReceiveProps(newProps) {
+    this.updateDots(newProps.bonds)
   }
 
   render() {
-    const { side, style, symbol, } = this.props
-    const { dots, bonds } = this.state
+    const { side, style, symbol, bonds, onPressDomain } = this.props
+    const { dots } = this.state
     const masterContainerStyle = { height:side, width:side, }
     const rowStyle = { flex:1, flexDirection:'row' }
     const eleContainerStyle = { flex:2, flexDirection:'row', }
@@ -78,23 +66,23 @@ export default class Lewis extends Component {
        <View style={[style, masterContainerStyle]}>
           <View style={rowStyle}>
             <View style={rowStyle}></View>
-              <Dots ins={bonds[0] || dots[0]} bonded={bonds[0]} onPress={()=>this.onPressDots(0)}/>
+              <Dots ins={bonds[0] || dots[0]} bonded={bonds[0]} onPress={()=>onPressDomain(0)}/>
             <View style={rowStyle}></View>
           </View>
           <View style={eleContainerStyle}>
             <View style={rowStyle}>
-              <Dots vertical ins={bonds[3] || dots[3]} bonded={bonds[3]} onPress={()=>this.onPressDots(3)} />
+              <Dots vertical ins={bonds[3] || dots[3]} bonded={bonds[3]} onPress={()=>onPressDomain(3)} />
             </View>
             <View style={elementStyle}>
               <Text style={textStyle}>{symbol}</Text>
             </View>
             <View style={rowStyle}>
-              <Dots vertical ins={bonds[1] || dots[1]} bonded={bonds[1]} onPress={()=>this.onPressDots(1)} />
+              <Dots vertical ins={bonds[1] || dots[1]} bonded={bonds[1]} onPress={()=>onPressDomain(1)} />
             </View>
           </View>
           <View style={rowStyle}>
             <View style={rowStyle}></View>
-              <Dots ins={bonds[2] || dots[2]} bonded={bonds[2]} onPress={()=>this.onPressDots(2)} />
+              <Dots ins={bonds[2] || dots[2]} bonded={bonds[2]} onPress={()=>onPressDomain(2)} />
             <View style={rowStyle}></View>
           </View>
        </View>

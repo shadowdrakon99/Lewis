@@ -13,9 +13,9 @@ export default class extends Component {
   }
 
   onBond(bonded,{upper, left}) {
-    const { pan } = this.props.atoms[bonded] //FIXME: will probably have to replace array index with a key assigned to each atom later
+    const { pan } = this.props.atoms[bonded]
     const { x, y } = pan.__getValue()
-    const snap = {dx:left-x, dy:upper-y}
+    const snap = {dx:left-x, dy:upper-y} // FIXME: this is def the place that's making the atoms jump when i don't want them to
     pan.setOffset({x,y})
     pan.setValue({x:0,y:0})
     Animated.parallel([
@@ -27,23 +27,23 @@ export default class extends Component {
   makeBondTrig(index, zone, bounds) {
     switch(zone) {
       case 'top':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({1:bonded, 2:index, vertical:true})}
+        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({0:bonded, 2:index})}
         break;
       case 'bottom':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({1:index, 2:bonded, vertical:true})}
+        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({0:index, 2:bonded})}
         break;
       case 'left':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({1:bonded, 2:index, vertical:false})}
+        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({3:bonded, 1:index})}
         break;
       case 'right':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({1:index, 2:bonded, vertical:false})}
+        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({1:index, 3:bonded})}
         break;
     }
   }
 
   render() {
 
-    const { atoms, bonds, onBond } = this.props;
+    const { atoms, bonds, onBond, onPressDomain } = this.props;
 
     const zones = atoms.map((a,k)=>{
       let { x, y } = a.pan.__getValue() // FIXME: this is a workaround. we should avoid calling the private function getValue
@@ -66,7 +66,14 @@ export default class extends Component {
     return (
       <View style={{position:'absolute', top:0, bottom:0, right:0, left:0, }}>
         {atoms.map((props ,k, ar)=>(
-          <DraggableAtom {...props} key={k} atoms={ar} bonds={bonds} index={k} zones={zones} onUpdate={this.forceUpdate.bind(this)}/>
+          <DraggableAtom {...props}
+          key={k}
+          atoms={ar}
+          bonds={bonds}
+          onPressDomain={(domain)=>onPressDomain(domain, k)}
+          index={k}
+          zones={zones}
+          onUpdate={this.forceUpdate.bind(this)}/>
         ))}
       </View>
     )

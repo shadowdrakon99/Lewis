@@ -55,6 +55,26 @@ class App extends Component {
 
   /*Could def use the <StatusBar /> cmpt from RN to make it prettier*/
 
+  addBond(domain, bonds) {
+    return (bonds[domain]<3) ? bonds[domain] + 1 : 0
+  } // IDEA: we could actually just add this into the makeBond function somehow? or nah....
+
+  onPressDomain(domain, atom) {
+    let newState = this.state.atoms.slice()
+    let pressedAtom = { ...newState[atom] }
+    // let bondedAtom = this.state.bonds.filter(b=>)
+      let newBonds = pressedAtom.bonds.slice()
+
+    // bonds[domain] = addBond(domain, bonds)
+    // newState[atom].bonds = bonds
+    // this.setState({atoms:newState})
+  } //TODO: update all bonded atoms instead of just the atom pressed
+  // TODO: need a check to make sure we aren't trying to form a bond with something that already has 3 bonds
+
+  getBondedAtoms() {
+
+  }
+
   render() {
 
     let { atoms, bonds } = this.state
@@ -69,7 +89,7 @@ class App extends Component {
           {this.renderButtons()}
         </View>
 
-        <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)}/>
+        <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)} onPressDomain={this.onPressDomain.bind(this)}/>
         <Trashcan style = {{position:'absolute', bottom:10, right:10}}/>
       </Container>
     );
