@@ -19,7 +19,7 @@ export default class extends Component {
 
   render() {
 
-    const { symbol, vale, atoms, index, zones, onUpdate, bonds, onPressDomain, trashZone } = this.props;
+    const { symbol, vale, atoms, index, zones, onUpdate, bonds, onPressDomain, trashZone, threeDZone } = this.props;
 
     // IDEA: when deleting an element, set that draggable atom to null so that we don't lose the array index
 
@@ -37,7 +37,7 @@ export default class extends Component {
     while (bonded.length>clusterSize)
 
     const triggers = zones.filter( ({index}) => bonded.indexOf(index)===-1 )
-    .map(v=>({...v, trigger:()=>v.trigger(index), })).concat([trashZone])
+    .map(v=>({...v, trigger:()=>v.trigger(index), })).concat([trashZone, threeDZone])
 
     const bondedPans = bonded.map(b=>atoms[b].pan)
 

@@ -35,17 +35,26 @@ export default class Lewis extends Component {
     this.setState({ dots: this.valeToDots(vale, newBonds) })
   }
 
-  valeToDots(vale, bonds) { //BUG: for some reason the array indicies with bonds still get assigned values > 0...
+  valeToDots(vale, bonds) {
       let dots = [0,0,0,0]
       const sumBonds = bonds.reduce((a,b)=>a+b, 0)
       const numLone = vale - sumBonds
       let skip = 0
-      for(let i=0; i<numLone; i++) {
-        if(bonds[(i+skip) % 4]) {skip = skip + 1; i--}
-        if(!bonds.includes(0)) break;
-        if(dots[(i+skip) % 4]<2) dots[(i+skip) % 4] = dots[(i+skip) % 4] + 1
+      if(sumBonds > 0) {
+        let remainingElectrons = numLone;
+        for(let i=0; i<4; i++) {
+          if(bonds[i] > 0) continue;
+          if(remainingElectrons>1) { dots[i] = 2; remainingElectrons = remainingElectrons - 2}
+          else if(remainingElectrons === 1) { dots[i] = 1; remainingElectrons--}
+        }
+      } else {
+        for(let i=0; i<numLone; i++) {
+          if(bonds[(i+skip) % 4]) {skip = skip + 1; i--}
+          let eDomain = (i+skip) % 4;
+          if(!bonds.includes(0)) break;
+          if(dots[eDomain]<2) dots[eDomain] = dots[eDomain] + 1
+        }
       }
-      // TODO: need some basic bond predicting logic...after bond, lone pair electrons are always paired even when shell isn't full?
       return dots
   }
 
@@ -117,9 +126,9 @@ class Dots extends Component {
   render() {
 
     const { vertical, ins, style, bonded, onPress } = this.props
-    const containerStyle = { flex:2, justifyContent:'center', alignItems:'center', }
+    const containerStyle = { flex:2, justifyContent:'center', alignItems:'center' }
     const dotStyle = {
-      justifyContent:'space-around',
+      justifyContent:'center',
       alignItems:'center',
       flexDirection:'row',
       transform: vertical?[{ rotate: '90deg'}]:[],
@@ -127,7 +136,7 @@ class Dots extends Component {
 
     return (
         <View style={[style, containerStyle]}>
-          <TouchableWithoutFeedback onPress={onPress} style={{ flex:1 }} >
+          <TouchableWithoutFeedback onPress={onPress} hitSlop={{top:1,bottom:1,right:1,left:1}} >
             <View style={dotStyle} >
                {this.renderDots(ins,bonded)}
             </View>

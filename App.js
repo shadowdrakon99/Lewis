@@ -72,21 +72,24 @@ class App extends Component {
     const bond = this.state.bonds.filter(b=>b[domain]===atom)[0]
     if(!bond) return
     let newAtoms = this.state.atoms.slice()
+    let resetBond = false;
     for ( domain in bond ) {
       if(!bond.hasOwnProperty(domain)) continue
       const atom = {...newAtoms[bond[domain]]}
       let newBonds = atom.bonds.slice()
       newBonds[domain] = (atom.bonds[domain]<3) ? atom.bonds[domain] + 1 : 0
       newAtoms[bond[domain]].bonds = newBonds
+      if(newBonds[domain]===0) resetBond = true;
+    }
+    if(resetBond) {
+      let newBondState = this.state.bonds.filter(b=>b[domain]!==atom)
+      this.setState({atoms:newAtoms, bonds:newBondState})
+      return
     }
     this.setState({atoms:newAtoms, })
 
   }
   // TODO: need a check to make sure we aren't trying to form a bond with something that already has 3 bonds
-
-  getBondedAtoms() {
-
-  }
 
   _getCluster(index) {
     return this.state.bonds.filter(b=>Object.values(b).indexOf(index)!==-1)
@@ -116,6 +119,10 @@ class App extends Component {
     this.setState({atoms, bonds})
   }
 
+  make3D(index) {
+    console.log(index); //TODO: bring up a nav or modal containing 3DCanvas
+  }
+
   render() {
 
     let { atoms, bonds } = this.state
@@ -128,7 +135,7 @@ class App extends Component {
         <View style={{flexDirection:'row', justifyContent: 'space-between' }}>
           {this.renderButtons()}
         </View>
-        <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)} onPressDomain={this.onPressDomain.bind(this)} deleteAtom={this.deleteAtom.bind(this)}/>
+        <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)} onPressDomain={this.onPressDomain.bind(this)} deleteAtom={this.deleteAtom.bind(this)} make3D={this.make3D.bind(this)}/>
         <IBox style={{ backgroundColor:'tomato', position:'absolute',  bottom:0,  right:0, }}><Icon name="trash"/></IBox>
         <IBox style={{ backgroundColor:'steelblue', position:'absolute',  bottom:0,  left:0, }}><Icon name="ionic"/></IBox>
       </Container>

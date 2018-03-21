@@ -49,6 +49,14 @@ export default class extends Component {
     }
   }
 
+  make3DZone(index) {
+    const { height, width } = Dimensions.get('window')
+    return {
+      trigger:()=>this.props.make3D(index),
+      bounds: {upper:height-75, lower:height, left:0, right:75}
+    }
+  }
+
   render() {
 
     const { atoms, bonds, onBond, onPressDomain, } = this.props
@@ -89,6 +97,7 @@ export default class extends Component {
             index={k}
             zones={zones}
             trashZone = {this.makeTrashZone(k)}
+            threeDZone = {this.make3DZone(k)}
             onUpdate={this.forceUpdate.bind(this)}/>
           )
         })}
