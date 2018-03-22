@@ -36,6 +36,7 @@ export default class App extends Component {
   }
 
   spawnAtom({symbol, vale}) {
+
     const newState = this.state.atoms.slice()
     newState.push({symbol, vale, pan: new Animated.ValueXY({x:100,y:100}), bonds:[0,0,0,0]})
     this.setState({atoms:newState})
@@ -128,7 +129,7 @@ export default class App extends Component {
     return (
       <Container style={{marginTop:StatusBar.currentHeight}}>
       <Tape />
-        <Modal openModal = {this.openModal.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
+        <Modal openModal = {this.openModal.bind(this)} spawnAtom = {this.spawnAtom.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
         <Header onMenuPress = {this.openModal.bind(this)}/>
 
         <View style={{flexDirection:'row', justifyContent: 'space-between' }}>

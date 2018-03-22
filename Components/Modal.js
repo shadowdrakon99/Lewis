@@ -1,7 +1,33 @@
 import React, { Component } from 'react';
 import { Text, View, Button, Modal, StyleSheet } from 'react-native';
 
+const elements = [
+  {symbol:'H', vale:1},
+  {symbol:'He', vale:8},
+  {symbol:'Li', vale:1},
+  {symbol:'Be', vale:2},
+  {symbol:'B', vale:3},
+  {symbol:'C', vale:4},
+  {symbol:'N', vale:5},
+  {symbol:'O', vale:6},
+  {symbol:'F', vale:7},
+  {symbol:'Ne', vale:8},
+  {symbol:'Na', vale:1},
+  {symbol:'Mg', vale:2},
+  {symbol:'Al', vale:3},
+  {symbol:'Si', vale:4},
+  {symbol:'P', vale:5},
+  {symbol:'S', vale:6},
+  {symbol:'Cl', vale:7},
+  {symbol:'Ar', vale:8},
+  ]
+
+
 export default class Modals extends Component {
+
+
+
+
 
 
 
@@ -9,7 +35,7 @@ export default class Modals extends Component {
   render() {
 
 
-    const { closeModal, openModal, modalVisible } = this.props;
+    const { closeModal, openModal, modalVisible, spawnAtom } = this.props;
 
     return (
           <Modal
@@ -21,24 +47,9 @@ export default class Modals extends Component {
             <Button onPress={() => closeModal()} title="<--"/>
               <View style={styles.innerContainer}>
 
-                <Button title="H" color = "red" onPress={() => closeModal()} />
-                <Button title="He" color = "red"onPress={() => closeModal()}/>
-                <Button title="Li" color = "red"onPress={() => closeModal()}/>
-                <Button title="Be" color = "red"onPress={() => closeModal()}/>
-                <Button title="B" color = "red"onPress={() => closeModal()}/>
-                <Button title="C" color = "red"onPress={() => closeModal()}/>
-                <Button title="N" color = "red"onPress={() => closeModal()}/>
-                <Button title="O" color = "red"onPress={() => closeModal()}/>
-                <Button title="F" color = "red"onPress={() => closeModal()}/>
-                <Button title="Ne" color = "red"onPress={() => closeModal()}/>
-                <Button title="Na" color = "red"onPress={() => closeModal()}/>
-                <Button title="Mg" color = "red"onPress={() => closeModal()}/>
-                <Button title="Al" color = "red"onPress={() => closeModal()}/>
-                <Button title="Si" color = "red"onPress={() => closeModal()}/>
-                <Button title="P" color = "red"onPress={() => closeModal()}/>
-                <Button title="S" color = "red"onPress={() => closeModal()}/>
-                <Button title="Cl" color = "red"onPress={() => closeModal()}/>
-                <Button title="Ar" color = "red"onPress={() => closeModal()}/>
+              { elements.map((e,k) =>
+                <Button color = "red" onPress={()=>{spawnAtom(e); closeModal()}} title={e.symbol} key={k}/>
+              )}
 
 
               </View>
