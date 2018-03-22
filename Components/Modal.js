@@ -25,13 +25,6 @@ const elements = [
 
 export default class Modals extends Component {
 
-
-
-
-
-
-
-
   render() {
 
 
@@ -39,6 +32,7 @@ export default class Modals extends Component {
 
     return (
           <Modal
+
               visible={ modalVisible }
               animationType={'slide'}
               onRequestClose={() => closeModal()}
