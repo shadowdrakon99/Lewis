@@ -15,7 +15,7 @@ export default class extends Component {
   onBond(bonded,{upper, left}) {
     const { pan } = this.props.atoms[bonded]
     const { x, y } = pan.__getValue()
-    const snap = {dx:left-x, dy:upper-y} // FIXME: this is def the place that's making the atoms jump when i don't want them to
+    const snap = {dx:left-x, dy:upper-y} 
     pan.setOffset({x,y})
     pan.setValue({x:0,y:0})
     Animated.parallel([

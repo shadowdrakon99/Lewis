@@ -27,7 +27,6 @@ export default class Modals extends Component {
 
   render() {
 
-
     const { closeModal, openModal, modalVisible, spawnAtom } = this.props;
 
     return (
