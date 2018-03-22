@@ -85,7 +85,7 @@ export default class extends Component {
       }, [])
 
     return (
-      <View style={{position:'absolute', top:0, bottom:0, right:0, left:0, }}>
+      <View style={{position:'absolute', top:0, bottom:0, right:0, left:0, zIndex:0 }}>
         {atoms.map((props ,k, ar)=>{
           if(props===null) return null
           return (

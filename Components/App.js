@@ -128,17 +128,13 @@ export default class App extends Component {
     let { atoms, bonds } = this.state
     return (
       <Container style={{marginTop:StatusBar.currentHeight}}>
-<<<<<<< HEAD
         <Tape />
-        <Modal openModal = {this.openModal.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
-=======
-      <Tape />
         <Modal openModal = {this.openModal.bind(this)} spawnAtom = {this.spawnAtom.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
->>>>>>> 94c477b09f5b53fa4d30f7b9c6be606739cd7c5f
-        <Header onMenuPress = {this.openModal.bind(this)}/>
-
-        <View style={{flexDirection:'row', justifyContent: 'space-between' }}>
-          {this.renderButtons()}
+        <View style={{position:'absolute', top:0, left:0, right:0, zIndex:1}} >
+          <Header onMenuPress = {this.openModal.bind(this)} />
+          <View style={{flexDirection:'row', justifyContent: 'space-between'}} >
+            {this.renderButtons()}
+          </View>
         </View>
         <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)} onPressDomain={this.onPressDomain.bind(this)} deleteAtom={this.deleteAtom.bind(this)} make3D={this.make3D.bind(this)}/>
         <IBox style={{ backgroundColor:'tomato', position:'absolute',  bottom:0,  right:0, }}><Icon name="trash"/></IBox>
