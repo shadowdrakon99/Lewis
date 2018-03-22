@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Animated} from 'react-native';
-import App from './Components/LinearMolecule'
+import App from './Components/App'
 import Expo from 'expo'
 
 export default class DevAppWrap extends Component {

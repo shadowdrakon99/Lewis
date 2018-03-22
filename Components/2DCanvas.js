@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Animated, Dimensions } from 'react-native'
+import { View, Animated, Dimensions, Platform } from 'react-native'
 
 import DraggableAtom from './DraggableAtom'
 
@@ -15,7 +15,7 @@ export default class extends Component {
   onBond(bonded,{upper, left}) {
     const { pan } = this.props.atoms[bonded]
     const { x, y } = pan.__getValue()
-    const snap = {dx:left-x, dy:upper-y} 
+    const snap = {dx:left-x, dy:upper-y}
     pan.setOffset({x,y})
     pan.setValue({x:0,y:0})
     Animated.parallel([
@@ -84,8 +84,10 @@ export default class extends Component {
         ]
       }, [])
 
+      let zIndex = Platform.OS === 'ios' ? {zIndex:0} : null
+
     return (
-      <View style={{position:'absolute', top:0, bottom:0, right:0, left:0, zIndex:0 }}>
+      <View style={[{position:'absolute', top:0, bottom:0, right:0, left:0, }, zIndex ]}>
         {atoms.map((props ,k, ar)=>{
           if(props===null) return null
           return (

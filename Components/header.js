@@ -9,9 +9,6 @@ export default class extends Component {
     return(
       <Header>
             <Left>
-              <Button transparent>
-                <Icon name='arrow-back' />
-              </Button>
             </Left>
             <Body>
               <Title>Lewis Model</Title>

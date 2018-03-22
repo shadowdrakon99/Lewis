@@ -83,7 +83,7 @@ export default class extends Component {
       let {x,y} = this.state.pan.__getValue();
 
       group.rotation.y += x/1000;
-      group.rotation.z += y/1000;
+      group.rotation.x += y/1000;
       renderer.render(scene, camera);
       gl.endFrameEXP();
     };

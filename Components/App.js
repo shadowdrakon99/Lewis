@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, StatusBar, Animated } from 'react-native';
+import { StyleSheet, Text, View, Button, StatusBar, Animated, Modal as Mod } from 'react-native';
 import Canvas from './2DCanvas';
 import Header from './header'
 import { Container, Icon } from 'native-base';
 import Modal from "./Modal"
 import IBox from './IconBox'
 import Tape from './TapeMeasure'
+import ThreeDMolecule from './LinearMolecule'
 
 const elements = [
   {symbol:'C', vale:4},
@@ -21,6 +22,7 @@ export default class App extends Component {
     super();
     this.state = {
       modalVisible: false,
+      threeD:false,
       atoms:[],
       bonds:[]
     };
@@ -120,7 +122,7 @@ export default class App extends Component {
   }
 
   make3D(index) {
-    console.log(index); //TODO: bring up a nav or modal containing 3DCanvas
+    this.setState({threeD:true}) //TODO: bring up a nav or modal containing 3DCanvas
   }
 
   render() {
@@ -130,6 +132,7 @@ export default class App extends Component {
       <Container style={{marginTop:StatusBar.currentHeight}}>
         <Tape />
         <Modal openModal = {this.openModal.bind(this)} spawnAtom = {this.spawnAtom.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
+        <Mod animationType="slide"  transparent={false} visible={this.state.threeD}><ThreeDMolecule /></Mod>
         <View style={{position:'absolute', top:0, left:0, right:0, zIndex:1}} >
           <Header onMenuPress = {this.openModal.bind(this)} />
           <View style={{flexDirection:'row', justifyContent: 'space-between'}} >
