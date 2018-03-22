@@ -1,39 +1,10 @@
 import Expo from "expo";
 import React, { Component } from "react";
-import {Text, View, Animated, PanResponder} from 'react-native';
+import {Text, View, Animated } from 'react-native';
 import * as THREE from "three";
 import ExpoTHREE from "expo-three";
 
 export default class extends Component {
-
-  constructor() {
-  super()
-
-  this.state={pan:new Animated.ValueXY()};
-  }
-
-  componentWillMount() {
-
-    this._val = { x:0, y:0 }
-    this.state.pan.addListener((value) => this._val = value);
-
-    this.panResponder = PanResponder.create({
-        onStartShouldSetPanResponder: (e, gesture) => true,
-        onPanResponderGrant: (e, gesture) => {
-          this.state.pan.setOffset({
-            x: this._val.x,
-            y:this._val.y
-          })
-          this.state.pan.setValue({ x:0, y:0})
-        },
-        onPanResponderMove: Animated.event([ null,
-            { dx: this.state.pan.x, dy: this.state.pan.y }
-        ]),
-        onPanResponderRelease: (e,g) => {
-          this.state.pan.setValue({x:0, y:0})
-        }
-      });
-  }
 
   _onGLContextCreate = async gl => {
     const scene = new THREE.Scene();
@@ -80,7 +51,7 @@ export default class extends Component {
 
     const render = () => {
       requestAnimationFrame(render);
-      let {x,y} = this.state.pan.__getValue();
+      let {x,y} = this.props.pan.__getValue();
 
       group.rotation.y += x/1000;
       group.rotation.x += y/1000;
@@ -92,13 +63,12 @@ export default class extends Component {
 
   render() {
 
-
     return(
-      <Animated.View style={{flex:1}} {...this.panResponder.panHandlers} >
+      <Animated.View style={{flex:1}} {...this.props.panResponder.panHandlers} >
        <Expo.GLView
            style={{ flex: 1 }}
-           onContextCreate={this._onGLContextCreate}
-             /></Animated.View>
+           onContextCreate={this._onGLContextCreate}/>
+      </Animated.View>
 
     )
 

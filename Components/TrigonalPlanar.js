@@ -1,6 +1,6 @@
 import Expo from "expo";
 import React, { Component } from "react";
-import {Text, View} from 'react-native';
+import {Text, View, Animated} from 'react-native';
 import * as THREE from "three";
 import ExpoTHREE from "expo-three";
 
@@ -61,8 +61,9 @@ export default class extends Component {
 
     const render = () => {
       requestAnimationFrame(render);
-      group.rotation.x += 0.01;
-      group.rotation.y += 0.01;
+      let {x,y} = this.props.pan.__getValue();
+      group.rotation.y += x/1000;
+      group.rotation.x += y/1000;
       renderer.render(scene, camera);
       gl.endFrameEXP();
     };
@@ -71,10 +72,12 @@ export default class extends Component {
 
   render() {
     return(
+      <Animated.View style={{flex:1}} {...this.props.panResponder.panHandlers} >
        <Expo.GLView
            style={{ flex: 1 }}
-           onContextCreate={this._onGLContextCreate}
-        />
+           onContextCreate={this._onGLContextCreate}/>
+      </Animated.View>
+
     )
 
   }

@@ -6,7 +6,7 @@ import { Container, Icon } from 'native-base';
 import Modal from "./Modal"
 import IBox from './IconBox'
 import Tape from './TapeMeasure'
-import ThreeDMolecule from './LinearMolecule'
+import ThreeDMolecule from './3DCanvas'
 
 const elements = [
   {symbol:'C', vale:4},
@@ -91,7 +91,6 @@ export default class App extends Component {
     this.setState({atoms:newAtoms, })
 
   }
-  // TODO: need a check to make sure we aren't trying to form a bond with something that already has 3 bonds
 
   _getCluster(index) {
     return this.state.bonds.filter(b=>Object.values(b).indexOf(index)!==-1)
@@ -122,7 +121,7 @@ export default class App extends Component {
   }
 
   make3D(index) {
-    this.setState({threeD:true}) //TODO: bring up a nav or modal containing 3DCanvas
+    this.setState({threeD:true})
   }
 
   render() {
@@ -132,7 +131,7 @@ export default class App extends Component {
       <Container style={{marginTop:StatusBar.currentHeight}}>
         <Tape />
         <Modal openModal = {this.openModal.bind(this)} spawnAtom = {this.spawnAtom.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
-        <Mod animationType="slide"  transparent={false} visible={this.state.threeD}><ThreeDMolecule /></Mod>
+        <Mod animationType="slide"  transparent={false} visible={this.state.threeD} onRequestClose={()=>this.setState({threeD:false})}><ThreeDMolecule /></Mod>
         <View style={{position:'absolute', top:0, left:0, right:0, zIndex:1}} >
           <Header onMenuPress = {this.openModal.bind(this)} />
           <View style={{flexDirection:'row', justifyContent: 'space-between'}} >
