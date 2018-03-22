@@ -127,7 +127,7 @@ export default class App extends Component {
     let { atoms, bonds } = this.state
     return (
       <Container style={{marginTop:StatusBar.currentHeight}}>
-      <Tape />
+        <Tape />
         <Modal openModal = {this.openModal.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
         <Header onMenuPress = {this.openModal.bind(this)}/>
 
