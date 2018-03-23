@@ -85,13 +85,11 @@ export default class App extends Component {
       let newBonds = atom.bonds.slice()
       newBonds[domain] = (atom.bonds[domain]<3) ? atom.bonds[domain] + 1 : 0
       newAtoms[bond[domain]].bonds = newBonds
-      if(newBonds[domain]===0) resetBond = true;
-      if(domain=="5" || domain =="4") octetException={domain, atomIndex:this.state.bonds.find(b=>b[domain==="5"?3:1]===bond[domain])[domain==="5"?1:3]}
-      console.log(domain)
+      if(newBonds[domain]===0) {resetBond = true; newAtoms[bond[domain]].center=true}
+      if(domain==="5" || domain ==="4") octetException={domain, atomIndex:this.state.bonds.find(b=>b[domain==="5"?3:1]===bond[domain])[domain==="5"?1:3]}
     }
     if(resetBond) {
       let newBondState = this.state.bonds.filter(b=>b[domainwa]!==atom)
-      newAtoms[bond[domainwa]].center = true
       if(octetException) {
         const { domain , atomIndex } = octetException;
         if(!atomIndex) return
@@ -101,7 +99,7 @@ export default class App extends Component {
         pan.setValue({x:0,y:0})
         Animated.parallel([
           Animated.timing(pan.x, {toValue:domain==="5"?-3:3}),
-          Animated.timing(pan.y, {toValue:domain==="5"?25:25}),
+          Animated.timing(pan.y, {toValue:25}),
         ]).start()
       }
       this.setState({atoms:newAtoms, bonds:newBondState})
@@ -168,7 +166,7 @@ export default class App extends Component {
       <Container style={{marginTop:StatusBar.currentHeight}}>
         <Tape />
         <Modal openModal = {this.openModal.bind(this)} spawnAtom = {this.spawnAtom.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
-        <Mod animationType="slide"  transparent={false} visible={this.state.threeD} onRequestClose={()=>this.setState({threeD:false})}><ThreeDMolecule viewScope={threeDViewScope} /></Mod>
+        <Mod animationType="slide"  transparent={false} visible={this.state.threeD} onRequestClose={()=>this.setState({threeD:false})}><ThreeDMolecule closeModal={()=>this.setState({threeD:false})} viewScope={threeDViewScope} /></Mod>
         <View style={{position:'absolute', top:0, left:0, right:0, zIndex:1}} >
           <Header onMenuPress = {this.openModal.bind(this)} />
           <View style={{flexDirection:'row', justifyContent: 'space-between'}} >

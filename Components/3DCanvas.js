@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PanResponder, Animated } from 'react-native';
+import { PanResponder, Animated, View, Button } from 'react-native';
 import Linear from './LinearMolecule';
 import TrigonalPlanar from './TrigonalPlanar';
 import Tetrahedral from './Tetrahedral';
@@ -37,8 +37,13 @@ export default class ThreeDCanvas extends Component {
 
   render() {
     const { centerAtom, bondedAtoms } = this.props.viewScope;
-    
-    return <TrigonalPlanar panResponder={this.panResponder} pan={this.state.pan} />
+    const { closeModal } = this.props
+    return (
+      <View style={{flex:1}}>
+        <TrigonalPlanar panResponder={this.panResponder} pan={this.state.pan} />
+        <Button onPress={()=>closeModal()} style={{position:'absolute', bottom:0, left:0, right:0}} title="Back to 2D"/>
+      </View>
+    )
 
   }
 
