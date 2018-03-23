@@ -14,13 +14,12 @@ export default class extends Component {
   static defaultProps = {
     height:50,
     width:50,
-    x:100,
-    y:100,
-    pan: new Animated.ValueXY(),
+    pan: new Animated.ValueXY({x:100,y:100}),
   }
 
-  constructor({ x, y }) {
+  constructor({ pan }) {
     super()
+    const { x, y } = pan.__getValue();
     this._pos = { x, y }
     this.getBundled = this.getBundled.bind(this)
     this.getTriggers = this.getTriggers.bind(this)

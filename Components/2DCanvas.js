@@ -12,10 +12,38 @@ export default class extends Component {
     this.onBond = this.onBond.bind(this)
   }
 
-  onBond(bonded,{upper, left}) {
+  onBond(bonded,{upper, left}, index, octetException) {
     const { pan } = this.props.atoms[bonded]
     const { x, y } = pan.__getValue()
-    const snap = {dx:left-x, dy:upper-y}
+    let snap = {dx:left-x, dy:upper-y}
+    let cpan, cx, cy
+    switch(octetException) {
+      case 1:
+        snap = {dx: snap.dx-3, dy:snap.dy+25}
+        cpan = this.props.atoms[this.props.bonds.find(b=>b[1]===index)[3]].pan
+        cx = cpan.__getValue().x
+        cy = cpan.__getValue().y
+        cpan.setOffset({x:cx, y:cy})
+        cpan.setValue({x:0,y:0})
+        Animated.parallel([
+          Animated.timing(cpan.x, {toValue:-3}),
+          Animated.timing(cpan.y, {toValue:-25}),
+        ]).start()
+        break;
+      case 3:
+        snap = {dx: snap.dx+3, dy:snap.dy+25}
+        cpan = this.props.atoms[this.props.bonds.find(b=>b[3]===index)[1]].pan
+        cx = cpan.__getValue().x
+        cy = cpan.__getValue().y
+        cpan.setOffset({x:cx, y:cy})
+        cpan.setValue({x:0,y:0})
+        Animated.parallel([
+          Animated.timing(cpan.x, {toValue:+3}),
+          Animated.timing(cpan.y, {toValue:-25}),
+        ]).start()
+        break;
+      default:
+    }
     pan.setOffset({x,y})
     pan.setValue({x:0,y:0})
     Animated.parallel([
@@ -24,19 +52,19 @@ export default class extends Component {
     ]).start()
   }
 
-  makeBondTrig(index, zone, bounds) {
+  makeBondTrig(index, zone, bounds, octetException) {
     switch(zone) {
       case 'top':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({2:bonded, 0:index})}
+        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({2:bonded, 0:index}, bonded, index)}
         break;
       case 'bottom':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({2:index, 0:bonded})}
+        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({2:index, 0:bonded}, bonded)}
         break;
       case 'left':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({1:bonded, 3:index})}
+        return (bonded)=>{this.onBond(bonded,bounds, index, octetException); this.props.onBond(octetException?{1:bonded, 5:index}:{1:bonded, 3:index}, bonded)}
         break;
       case 'right':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({1:index, 3:bonded})}
+        return (bonded)=>{this.onBond(bonded,bounds, index, octetException); this.props.onBond(octetException?{4:index, 3:bonded}:{1:index, 3:bonded}, bonded)}
         break;
     }
   }
@@ -63,6 +91,7 @@ export default class extends Component {
 
     const zones = atoms.map((a,k)=>{
       if(a===null) return null
+      if(a.center===false) return null
       let { x, y } = a.pan.__getValue() // FIXME: this is a workaround. we should avoid calling the private function getValue
       return {
         index:k,
@@ -75,13 +104,13 @@ export default class extends Component {
       (ag, v)=>{
         if (v === null) return ag
         let { index, top, bottom, left, right } = v
-        return [
-          ...ag,
-          {index, trigger:this.makeBondTrig(index,'top', top), bounds:top},
-          {index, trigger:this.makeBondTrig(index,'bottom', bottom), bounds:bottom},
-          {index, trigger:this.makeBondTrig(index,'left', left), bounds:left},
-          {index, trigger:this.makeBondTrig(index,'right', right), bounds:right},
-        ]
+        const atom = atoms[index]
+        let trigs = []
+        if(atom.bonds[0]===0) trigs.push({index, trigger:this.makeBondTrig(index,'top', top), bounds:top})
+        if(atom.bonds[2]===0) trigs.push({index, trigger:this.makeBondTrig(index,'bottom', bottom), bounds:bottom})
+        if(atom.bonds[3]<2) trigs.push({index, trigger:this.makeBondTrig(index,'left', left, atom.bonds[3]===1&&3), bounds:left})
+        if(atom.bonds[1]<2) trigs.push({index, trigger:this.makeBondTrig(index,'right', right, atom.bonds[1]===1&&1), bounds:right})
+        return [ ...ag, ...trigs,]
       }, [])
 
       let zIndex = Platform.OS === 'ios' ? {zIndex:0} : null

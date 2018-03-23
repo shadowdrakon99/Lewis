@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, StatusBar, Animated, Modal as Mod } from 'react-native';
+import { StyleSheet, Text, View, Button, StatusBar, Animated, Modal as Mod, Dimensions } from 'react-native';
 import Canvas from './2DCanvas';
 import Header from './header'
 import { Container, Icon } from 'native-base';
@@ -9,11 +9,11 @@ import Tape from './TapeMeasure'
 import ThreeDMolecule from './3DCanvas'
 
 const elements = [
+  {symbol:'H', vale:1},
   {symbol:'C', vale:4},
   {symbol:'N', vale:5},
   {symbol:'O', vale:6},
   {symbol:'F', vale:7},
-  {symbol:'Ne', vale:8},
 ]
 
 export default class App extends Component {
@@ -38,17 +38,18 @@ export default class App extends Component {
     this.setState({modalVisible:false});
   }
 
-  spawnAtom({symbol, vale}) {
-
+  spawnAtom(element) {
+    const { height, width } = Dimensions.get('window');
     const newState = this.state.atoms.slice()
-    newState.push({symbol, vale, pan: new Animated.ValueXY({x:100,y:100}), bonds:[0,0,0,0]})
+    newState.push({...element, center:true, pan: new Animated.ValueXY({x:width/2,y:height/2}), bonds:[0,0,0,0,0,0]})
     this.setState({atoms:newState})
   }
 
-  makeBond(bond) {
+  makeBond(bond, bondedIndex) {
     let newBonds = this.state.bonds.slice()
     newBonds.push(bond)
     let newBondedAtoms = this.state.atoms.slice()
+    newBondedAtoms[bondedIndex].center=false
     for( domain in bond ) {
       if(!bond.hasOwnProperty(domain)) continue
       const atom = {...newBondedAtoms[bond[domain]]}
@@ -160,7 +161,7 @@ export default class App extends Component {
         </View>
         <Canvas atoms={atoms} bonds={bonds} onBond={this.makeBond.bind(this)} onPressDomain={this.onPressDomain.bind(this)} deleteAtom={this.deleteAtom.bind(this)} make3D={this.make3D.bind(this)}/>
         <IBox style={{ backgroundColor:'tomato', position:'absolute',  bottom:0,  right:0, }}><Icon name="trash"/></IBox>
-        <IBox style={{ backgroundColor:'steelblue', position:'absolute',  bottom:0,  left:0, }}><Icon name="ionic"/></IBox>
+        <IBox style={{ backgroundColor:'steelblue', position:'absolute',  bottom:0,  left:0, }}><Text style={{fontWeight:"500", fontSize:20}}>3D</Text></IBox>
       </Container>
     );
   }

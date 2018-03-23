@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Text, View, TouchableWithoutFeedback } from 'react-native';
 import PropTypes from 'prop-types'
 
 export default class Lewis extends Component {
@@ -18,7 +18,8 @@ export default class Lewis extends Component {
     side:50,
     vale:1,
     symbol:"H",
-    bonds:[0,0,0,0]
+    bonds:[0,0,0,0,0,0],
+    tilt:'0deg'
   }
 
   static propTypes = {
@@ -28,6 +29,7 @@ export default class Lewis extends Component {
     bonds:PropTypes.arrayOf(PropTypes.number), // number of bonds on [ top, right, bottom, left ] sides
     style:PropTypes.oneOfType([PropTypes.array, PropTypes.object]), // style of container
     onPressDomain:PropTypes.func.isRequired,
+    tilt:PropTypes.string,
   }
 
   updateDots(newBonds) {
@@ -36,24 +38,24 @@ export default class Lewis extends Component {
   }
 
   valeToDots(vale, bonds) {
-      let dots = [0,0,0,0]
+      let dots = [0,0,0,0,0,0]
       const sumBonds = bonds.reduce((a,b)=>a+b, 0)
       const numLone = vale - sumBonds
-      let skip = 0
-      if(sumBonds > 0) {
-        let remainingElectrons = numLone;
-        for(let i=0; i<4; i++) {
-          if(bonds[i] > 0) continue;
-          if(remainingElectrons>1) { dots[i] = 2; remainingElectrons = remainingElectrons - 2}
-          else if(remainingElectrons === 1) { dots[i] = 1; remainingElectrons--}
-        }
-      } else {
+
+      if(sumBonds==0) {
         for(let i=0; i<numLone; i++) {
-          if(bonds[(i+skip) % 4]) {skip = skip + 1; i--}
-          let eDomain = (i+skip) % 4;
-          if(!bonds.includes(0)) break;
-          if(dots[eDomain]<2) dots[eDomain] = dots[eDomain] + 1
+          let domain = i%4
+          if(dots[domain]<2) dots[domain] += 1
         }
+        return dots
+      }
+
+      let remainingElectrons = numLone;
+      for(let i=0; i<6; i++) {
+        if(bonds[i] > 0) continue;
+        if(remainingElectrons<1) break;
+        if(remainingElectrons>1) { dots[i] = 2; remainingElectrons = remainingElectrons - 2}
+        else if(remainingElectrons === 1) { dots[i] = 1; remainingElectrons--}
       }
       return dots
   }
@@ -63,36 +65,49 @@ export default class Lewis extends Component {
   }
 
   render() {
-    const { side, style, symbol, bonds, onPressDomain } = this.props
+    const { side, style, symbol, bonds, onPressDomain, tilt } = this.props
     const { dots } = this.state
-    const masterContainerStyle = { height:side, width:side, }
+    const masterContainerStyle = { height:side, width:side, transform:[{rotate:tilt}] }
+    let etilt = tilt
+    if(tilt==='30deg') {etilt = "-30deg"}
+    else if (tilt==='-30deg') {etilt = "30deg"}
     const rowStyle = { flex:1, flexDirection:'row' }
     const eleContainerStyle = { flex:2, flexDirection:'row', }
-    const elementStyle = { flex:2, justifyContent:'space-around', alignItems:'center', flexDirection:'row', }
+    const elementStyle = { flex:2, justifyContent:'space-around', alignItems:'center', flexDirection:'row', transform:[{rotate:etilt}] }
+    const dotStyle = {position:'absolute', top:0,left:0,bottom:0,right:0, }
     const textStyle = { fontSize:side*.3 }
 
+    const renderDots = (position, vertical, transform) => (
+        <Dots vertical={vertical}
+        ins={bonds[position] || dots[position]}
+        bonded={bonds[position]}
+        onPress={()=>onPressDomain(position)}
+        style={[dotStyle, transform?{transform}:null]}/>
+      )
 
     return(
        <View style={[style, masterContainerStyle]}>
           <View style={rowStyle}>
             <View style={rowStyle}></View>
-              <Dots ins={bonds[0] || dots[0]} bonded={bonds[0]} onPress={()=>onPressDomain(0)}/>
+              {renderDots(0)}
             <View style={rowStyle}></View>
           </View>
           <View style={eleContainerStyle}>
             <View style={rowStyle}>
-              <Dots vertical ins={bonds[3] || dots[3]} bonded={bonds[3]} onPress={()=>onPressDomain(3)} />
+              {renderDots(3,true,(dots[5]+bonds[5]>0) ? [{rotate:'30deg'}, {translateX:-2},{translateY:-8}] : null )}
+              {renderDots(5,true,[{rotate:'-30deg'}, {translateX:-2},{translateY:8}])}
             </View>
             <View style={elementStyle}>
               <Text style={textStyle}>{symbol}</Text>
             </View>
             <View style={rowStyle}>
-              <Dots vertical ins={bonds[1] || dots[1]} bonded={bonds[1]} onPress={()=>onPressDomain(1)} />
+              {renderDots(1,true, (dots[4]+bonds[4]>0) ? [{rotate:'-30deg'}, {translateX:2},{translateY:-8}] : null)}
+              {renderDots(4,true,[{rotate:'30deg'}, {translateX:2},{translateY:8}])}
             </View>
           </View>
           <View style={rowStyle}>
             <View style={rowStyle}></View>
-              <Dots ins={bonds[2] || dots[2]} bonded={bonds[2]} onPress={()=>onPressDomain(2)} />
+              {renderDots(2)}
             <View style={rowStyle}></View>
           </View>
        </View>
