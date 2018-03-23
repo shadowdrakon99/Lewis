@@ -81,7 +81,7 @@ export default class Lewis extends Component {
         <Dots vertical={vertical}
         ins={bonds[position] || dots[position]}
         bonded={bonds[position]}
-        onPress={()=>onPressDomain(position)}
+        onPress={()=>{onPressDomain(position)}}
         style={[dotStyle, transform?{transform}:null]}/>
       )
 
@@ -95,14 +95,14 @@ export default class Lewis extends Component {
           <View style={eleContainerStyle}>
             <View style={rowStyle}>
               {renderDots(3,true,(dots[5]+bonds[5]>0) ? [{rotate:'30deg'}, {translateX:-2},{translateY:-8}] : null )}
-              {renderDots(5,true,[{rotate:'-30deg'}, {translateX:-2},{translateY:8}])}
+              {(dots[5]+bonds[5]>0) && renderDots(5,true,[{rotate:'-30deg'}, {translateX:-2},{translateY:8}])}
             </View>
             <View style={elementStyle}>
               <Text style={textStyle}>{symbol}</Text>
             </View>
             <View style={rowStyle}>
               {renderDots(1,true, (dots[4]+bonds[4]>0) ? [{rotate:'-30deg'}, {translateX:2},{translateY:-8}] : null)}
-              {renderDots(4,true,[{rotate:'30deg'}, {translateX:2},{translateY:8}])}
+              {(dots[4]+bonds[4]>0) && renderDots(4,true,[{rotate:'30deg'}, {translateX:2},{translateY:8}])}
             </View>
           </View>
           <View style={rowStyle}>
@@ -151,7 +151,7 @@ class Dots extends Component {
 
     return (
         <View style={[style, containerStyle]}>
-          <TouchableWithoutFeedback onPress={onPress} hitSlop={{top:1,bottom:1,right:1,left:1}} >
+          <TouchableWithoutFeedback onPress={onPress} hitSlop={{top:5,bottom:5,right:5,left:5}} >
             <View style={dotStyle} >
                {this.renderDots(ins,bonded)}
             </View>

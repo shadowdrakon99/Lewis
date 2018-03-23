@@ -74,9 +74,11 @@ export default class App extends Component {
 
   onPressDomain(domain, atom) {
     const bond = this.state.bonds.filter(b=>b[domain]===atom)[0]
+    const domainwa = domain
     if(!bond) return
     let newAtoms = this.state.atoms.slice()
     let resetBond = false;
+    let octetException = false;
     for ( domain in bond ) {
       if(!bond.hasOwnProperty(domain)) continue
       const atom = {...newAtoms[bond[domain]]}
@@ -84,9 +86,24 @@ export default class App extends Component {
       newBonds[domain] = (atom.bonds[domain]<3) ? atom.bonds[domain] + 1 : 0
       newAtoms[bond[domain]].bonds = newBonds
       if(newBonds[domain]===0) resetBond = true;
+      if(domain=="5" || domain =="4") octetException={domain, atomIndex:this.state.bonds.find(b=>b[domain==="5"?3:1]===bond[domain])[domain==="5"?1:3]}
+      console.log(domain)
     }
     if(resetBond) {
-      let newBondState = this.state.bonds.filter(b=>b[domain]!==atom)
+      let newBondState = this.state.bonds.filter(b=>b[domainwa]!==atom)
+      newAtoms[bond[domainwa]].center = true
+      if(octetException) {
+        const { domain , atomIndex } = octetException;
+        if(!atomIndex) return
+        const { pan } = this.state.atoms[atomIndex]
+        const { x, y } = pan.__getValue()
+        pan.setOffset({x,y})
+        pan.setValue({x:0,y:0})
+        Animated.parallel([
+          Animated.timing(pan.x, {toValue:domain==="5"?-3:3}),
+          Animated.timing(pan.y, {toValue:domain==="5"?25:25}),
+        ]).start()
+      }
       this.setState({atoms:newAtoms, bonds:newBondState})
       return
     }
@@ -118,7 +135,6 @@ export default class App extends Component {
       atoms[v] = null
       bonds = bonds.filter(b=>Object.values(b).indexOf(v)===-1)
     })
-
     this.setState({atoms, bonds})
   }
 

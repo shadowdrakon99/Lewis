@@ -42,25 +42,26 @@ export default class extends Component {
     let tilt = "0deg"
     if( center === false ) {
       const bond = bonds.find(b=>Object.values(b).indexOf(index)!==-1)
-      const pos = Object.keys(bond)[(Object.values(bond)[0] !== index)?0:1]
-      const centerAtom = atoms[bond[pos]]
-      switch(pos) {
-        case '1':
-          if(centerAtom.bonds[4]!==0) tilt = "-30deg";
-          break;
-        case '3':
-          if(centerAtom.bonds[5]!==0) tilt = "30deg";
-          break;
-        case '4':
-          tilt = "30deg";
-          break;
-        case '5':
-          tilt = "-30deg";
-          break;
-        default:
-          break;
+      if(bond) {
+        const pos = Object.keys(bond)[(Object.values(bond)[0] !== index)?0:1]
+        const centerAtom = atoms[bond[pos]]
+        switch(pos) {
+          case '1':
+            if(centerAtom.bonds[4]!==0) tilt = "-30deg";
+            break;
+          case '3':
+            if(centerAtom.bonds[5]!==0) tilt = "30deg";
+            break;
+          case '4':
+            tilt = "30deg";
+            break;
+          case '5':
+            tilt = "-30deg";
+            break;
+          default:
+            break;
+        }
       }
-      console.log(tilt)
     }
 
     return (
