@@ -36,7 +36,10 @@ export default class ThreeDCanvas extends Component {
   }
 
   render() {
+    const { centerAtom, bondedAtoms } = this.props.viewScope;
+    
     return <TrigonalPlanar panResponder={this.panResponder} pan={this.state.pan} />
+
   }
 
 }

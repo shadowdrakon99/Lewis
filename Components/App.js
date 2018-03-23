@@ -23,6 +23,7 @@ export default class App extends Component {
     this.state = {
       modalVisible: false,
       threeD:false,
+      threeDViewScope:null,
       atoms:[],
       bonds:[]
     };
@@ -121,17 +122,36 @@ export default class App extends Component {
   }
 
   make3D(index) {
-    this.setState({threeD:true})
+
+    const centerAtom = this.state.atoms[index]
+    const bondedAtoms = this.state.bonds
+    .filter(b=>Object.values(b).indexOf(index)!==-1)
+    .map(b=>{
+      const domains = Object.keys(b)
+      const atoms = Object.values(b)
+      const isFirst = atoms[0]===index
+      return {
+        domain:domains[isFirst?0:1],
+        ...this.state.atoms[atoms[isFirst?1:0]]
+      }
+    })
+
+    if(bondedAtoms.filter(atom=>atom.bonds.filter(b=>b===0).length<3).length!==0) {
+      alert('3D views of molecules with more than one center atom are not yet supported. Please drag with your finger on the only center atom.')
+      return
+    }
+
+    this.setState({threeD:true, threeDViewScope:{centerAtom, bondedAtoms}})
   }
 
   render() {
 
-    let { atoms, bonds } = this.state
+    let { atoms, bonds, threeDViewScope } = this.state
     return (
       <Container style={{marginTop:StatusBar.currentHeight}}>
         <Tape />
         <Modal openModal = {this.openModal.bind(this)} spawnAtom = {this.spawnAtom.bind(this)} closeModal = {this.closeModal.bind(this)} modalVisible = {this.state.modalVisible}/>
-        <Mod animationType="slide"  transparent={false} visible={this.state.threeD} onRequestClose={()=>this.setState({threeD:false})}><ThreeDMolecule /></Mod>
+        <Mod animationType="slide"  transparent={false} visible={this.state.threeD} onRequestClose={()=>this.setState({threeD:false})}><ThreeDMolecule viewScope={threeDViewScope} /></Mod>
         <View style={{position:'absolute', top:0, left:0, right:0, zIndex:1}} >
           <Header onMenuPress = {this.openModal.bind(this)} />
           <View style={{flexDirection:'row', justifyContent: 'space-between'}} >
