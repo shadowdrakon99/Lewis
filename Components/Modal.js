@@ -3,7 +3,7 @@ import { Text, View, Button, Modal, StyleSheet } from 'react-native';
 
 const elements = [
   {symbol:'H', vale:1},
-  {symbol:'He', vale:8},
+  {symbol:'He', vale:2},
   {symbol:'Li', vale:1},
   {symbol:'Be', vale:2},
   {symbol:'B', vale:3},

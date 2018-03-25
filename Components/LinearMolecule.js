@@ -1,6 +1,6 @@
 import Expo from "expo";
 import React, { Component } from "react";
-import {Text, View, Animated } from 'react-native';
+import {Text, View } from 'react-native';
 import * as THREE from "three";
 import ExpoTHREE from "expo-three";
 
@@ -14,35 +14,40 @@ export default class extends Component {
     const renderer = ExpoTHREE.createRenderer({ gl });
     renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-    const geometry = new THREE.CylinderGeometry(1, 1, 5, 24, 20);
-    const material = new THREE.MeshPhongMaterial({ color: '#40e0d0'});
-    const cylinder = new THREE.Mesh(geometry, material);
-    const cylinder2 = new THREE.Mesh(geometry, material);
 
+    makeBallAndStick = ({color}, rx, ry, rz) => {
+      const material = new THREE.MeshPhongMaterial({ color });
+      let ballAndStickGeometry = new THREE.Geometry();
+      const ballGeometry = new THREE.SphereGeometry( 3, 32, 32 );
+      const stickGeometry = new THREE.CylinderGeometry(1, 1, 5, 24, 20);
+      let ballMesh = new THREE.Mesh(ballGeometry, material);
+      let stickMesh = new THREE.Mesh(stickGeometry, material);
+      ballMesh.position.set(0,8,0);
+      stickMesh.position.set(0,4,0);
+
+      ballAndStickGeometry.mergeMesh(ballMesh)
+      ballAndStickGeometry.mergeMesh(stickMesh)
+
+      let ballAndStickMesh = new THREE.Mesh(ballAndStickGeometry, material)
+
+      if(rx) ballAndStickMesh.rotateX(rx)
+      if(ry) ballAndStickMesh.rotateY(ry)
+      if(rz) ballAndStickMesh.rotateZ(rz)
+
+      return ballAndStickMesh
+    }
 
     var geometrySphere = new THREE.SphereGeometry( 3, 32, 32 );
-    var materialSphere = new THREE.MeshPhongMaterial( {color: this.props.color} );
+    var materialSphere = new THREE.MeshPhongMaterial( {color: '#40e0d0'} );
     var sphere = new THREE.Mesh( geometrySphere, materialSphere);
-    var sphere2 = new THREE.Mesh( geometrySphere, materialSphere);
-    var sphere3 = new THREE.Mesh( geometrySphere, materialSphere);
 
-    var group = new THREE.Group();
+    let group = new THREE.Group();
+    let directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
 
-    var directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
+    group.add(makeBallAndStick({color: "#4286f4"},0, 0 , 1.54))
+    group.add(makeBallAndStick({color: "#4286f4"},0, 0, -1.54))
+    group.add(sphere);
 
-
-    cylinder.position.set(0,-4,0);
-    cylinder2.position.set(0,4,0);
-
-    sphere2.position.set(0,-8,0);
-    sphere3.position.set(0,8,0);
-
-    group.add( cylinder);
-    group.add( cylinder2);
-    group.add( sphere);
-    group.add( sphere2);
-    group.add( sphere3);
-    group.rotateZ(1.5707);
     scene.add( directionalLight );
     scene.add( group );
 
@@ -52,7 +57,6 @@ export default class extends Component {
     const render = () => {
       requestAnimationFrame(render);
       let {x,y} = this.props.pan.__getValue();
-
       group.rotation.y += x/1000;
       group.rotation.x += y/1000;
       renderer.render(scene, camera);
@@ -62,5 +66,4 @@ export default class extends Component {
   };
 
   render = () => (<Expo.GLView style={{ flex: 1 }} onContextCreate={this._onGLContextCreate}/>)
-  
 }

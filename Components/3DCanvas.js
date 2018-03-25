@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { PanResponder, Animated, View, Button } from 'react-native';
+import { PanResponder, Animated, View } from 'react-native';
+import { Button } from 'native-base';
 import Linear from './LinearMolecule';
 import TrigonalPlanar from './TrigonalPlanar';
 import Tetrahedral from './Tetrahedral';
@@ -42,11 +43,18 @@ export default class ThreeDCanvas extends Component {
     const { centerAtom, bondedAtoms } = this.props.viewScope;
     const { closeModal } = this.props
 
+    const bonded = bondedAtoms.reduce((a,v) =>{
+      if(v) return [...a, ...v];
+      else return a
+    }, [])
+
     const totalBonds = centerAtom.bonds.reduce((a,v) => a+v, 0)
     const lonePairElectrons = centerAtom.vale - totalBonds
 
     const molecularDomains = centerAtom.bonds.reduce((a,v) =>{ if(v!=0){ return (a+1)} else{return a}}, 0)
-    const electronDomains = molecularDomains + (totalBonds===0?4:Math.floor(lonePairElectrons/2))
+    const electronDomains = totalBonds>0
+    ? (molecularDomains + Math.floor(lonePairElectrons/2))
+    : (centerAtom.vale<4?centerAtom.vale:4)
 
     let Molecule
 
@@ -73,8 +81,16 @@ export default class ThreeDCanvas extends Component {
 
     return (
       <Animated.View style={{flex:1}} {...this.panResponder.panHandlers}>
-        <Molecule pan={this.state.pan} />
-        <Button onPress={()=>closeModal()} style={{position:'absolute', bottom:0, left:0, right:0}} title="Back to 2D"/>
+        <Molecule
+        pan={this.state.pan}
+        center={ centerAtom }
+        bonded={ bonded }
+        />
+
+        <Button
+        onPress={()=>closeModal()}
+        style={{position:'absolute', bottom:0, left:0, right:0}}
+        title="Back to 2D"/>
       </Animated.View>
     )
 
