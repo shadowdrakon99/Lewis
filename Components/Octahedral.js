@@ -62,5 +62,5 @@ export default class extends Component {
   };
 
   render = () => (<Expo.GLView style={{ flex: 1 }} onContextCreate={this._onGLContextCreate}/>)
-  
+
 }

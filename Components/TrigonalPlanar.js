@@ -70,15 +70,5 @@ export default class extends Component {
     render();
   };
 
-  render() {
-    return(
-      <Animated.View style={{flex:1}} {...this.props.panResponder.panHandlers} >
-       <Expo.GLView
-           style={{ flex: 1 }}
-           onContextCreate={this._onGLContextCreate}/>
-      </Animated.View>
-
-    )
-
-  }
+  render = () => (<Expo.GLView style={{ flex: 1 }} onContextCreate={this._onGLContextCreate}/>)
 }
