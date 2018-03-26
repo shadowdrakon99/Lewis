@@ -13,7 +13,7 @@ export default class ThreeDCanvas extends Component {
 
   constructor() {
     super()
-    this.state={pan: new Animated.ValueXY()};
+    this.state={pan: new Animated.ValueXY(), molecular:true};
   }
 
   componentWillMount() {
@@ -48,7 +48,7 @@ export default class ThreeDCanvas extends Component {
 
     const molecularDomains = centerAtom.bonds.reduce((a,v) =>{ if(v!=0){ return (a+1)} else{return a}}, 0)
     const electronDomains = totalBonds>0
-    ? (molecularDomains + Math.floor(lonePairElectrons/2))
+    ? (molecularDomains + Math.ceil(lonePairElectrons/2))
     : (centerAtom.vale<4?centerAtom.vale:4)
 
     let Molecule
@@ -86,13 +86,21 @@ export default class ThreeDCanvas extends Component {
 
     return (
       <Animated.View style={{flex:1}} {...this.panResponder.panHandlers}>
-        <Molecule pan={this.state.pan} center={ centerAtom } bonded={ bondedAtoms } />
-
-        <View style={{position:'absolute', bottom:70, right:0, width:40, zIndex:-1, height:'100%', justifyContent:'flex-end'}} >
+        { this.state.molecular
+          ?<Molecule pan={this.state.pan} center={ centerAtom } bonded={ bondedAtoms } molecular />
+          :null
+        }
+        { this.state.molecular
+          ?null
+          :<Molecule pan={this.state.pan} center={ centerAtom } molecular={false} />
+        }
+        <View style={{position:'absolute', bottom:100, right:0, width:40, zIndex:-1, height:'100%', justifyContent:'flex-end'}} >
           {renderLegendItem(centerAtom)}
           {bondedAtoms.map(renderLegendItem)}
         </View>
-
+        <Button style={{position:'absolute', bottom:50, left:0, right:0}} rounded light full onPress={()=>this.setState({molecular:!this.state.molecular})}>
+          <Text>Switch to {this.state.molecular?"Electron":"Molecular"} Domain Geometry</Text>
+        </Button>
         <Button
         onPress={()=>closeModal()}
         style={{position:'absolute', bottom:0, left:0, right:0}}>

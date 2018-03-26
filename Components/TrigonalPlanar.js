@@ -4,7 +4,7 @@ import {Text, View } from 'react-native';
 import * as THREE from "three";
 import ExpoTHREE from "expo-three";
 
-import makeBallAndStick from '../lib/makeBallAndStick';
+import { makeBallAndStick, makeED } from '../lib/makeBallAndStick';
 
 export default class extends Component {
 
@@ -23,11 +23,18 @@ export default class extends Component {
     let group = new THREE.Group();
     let directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
 
-    const { bonded:[up, left, right] } = this.props
+    const { bonded, molecular } = this.props
 
-    if(up) group.add(makeBallAndStick({color: up.color}))
-    if(left) group.add(makeBallAndStick({color: left.color},0, 0, 2.09599366))
-    if(right) group.add(makeBallAndStick({color: right.color},0, 0 , -2.09599366))
+    if(molecular) {
+      if(bonded[0]) group.add(makeBallAndStick({color: bonded[0].color}))
+      if(bonded[1]) group.add(makeBallAndStick({color: bonded[1].color},0, 0, 2.09599366))
+      if(bonded[2]) group.add(makeBallAndStick({color: bonded[2].color},0, 0 , -2.09599366))
+    }
+    if(!molecular) {
+      group.add(makeED(0,0,0))
+      group.add(makeED(0, 0, 2.09599366))
+      group.add(makeED(0, 0, -2.09599366))
+    }
     group.add(sphere);
 
     scene.add( directionalLight );

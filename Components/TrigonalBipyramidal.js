@@ -4,7 +4,7 @@ import {Text, View } from 'react-native';
 import * as THREE from "three";
 import ExpoTHREE from "expo-three";
 
-import makeBallAndStick from '../lib/makeBallAndStick';
+import { makeBallAndStick, makeED } from '../lib/makeBallAndStick';
 
 export default class extends Component {
 
@@ -23,13 +23,20 @@ export default class extends Component {
     let group = new THREE.Group();
     let directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
 
-    const { bonded } = this.props
-
-    if(bonded[4]) group.add(makeBallAndStick({color: bonded[4].color})) //TOP
-    if(bonded[3]) group.add(makeBallAndStick({color: bonded[3].color},0, 0, 3.14)) //BOTTOM
-    if(bonded[0]) group.add(makeBallAndStick({color: bonded[0].color},0, 0 , 1.57))
-    if(bonded[1]) group.add(makeBallAndStick({color: bonded[1].color},0, 2.09599366 , 1.57))
-    if(bonded[2]) group.add(makeBallAndStick({color: bonded[2].color},0, -2.09599366, 1.57))
+    const { bonded, molecular } = this.props
+    if(molecular) {
+      if(bonded[0]) group.add(makeBallAndStick({color: bonded[0].color})) //TOP
+      if(bonded[1]) group.add(makeBallAndStick({color: bonded[1].color},0, 0, 3.14)) //BOTTOM
+      if(bonded[2]) group.add(makeBallAndStick({color: bonded[2].color},0, 0 , 1.57))
+      if(bonded[3]) group.add(makeBallAndStick({color: bonded[3].color},0, 2.09599366 , 1.57))
+      if(bonded[4]) group.add(makeBallAndStick({color: bonded[4].color},0, -2.09599366, 1.57))
+    } else {
+      group.add(makeED())
+      group.add(makeED(0, 0, 3.14))
+      group.add(makeED(0, 0 , 1.57))
+      group.add(makeED(0, 2.09599366 , 1.57))
+      group.add(makeED(0, -2.09599366, 1.57))
+    }
     group.add(sphere);
 
     scene.add( directionalLight );
