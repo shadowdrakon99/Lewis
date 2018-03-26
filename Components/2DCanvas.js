@@ -53,18 +53,19 @@ export default class extends Component {
   }
 
   makeBondTrig(index, zone, bounds, octetException) {
+    const {atoms} = this.props
     switch(zone) {
       case 'top':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({2:bonded, 0:index}, bonded, index)}
+        return (bonded)=>{if(!atoms[bonded].center) { return }; this.onBond(bonded,bounds); this.props.onBond({2:bonded, 0:index}, bonded, index)}
         break;
       case 'bottom':
-        return (bonded)=>{this.onBond(bonded,bounds); this.props.onBond({2:index, 0:bonded}, bonded)}
+        return (bonded)=>{if(!atoms[bonded].center) { return }; this.onBond(bonded,bounds); this.props.onBond({2:index, 0:bonded}, bonded)}
         break;
       case 'left':
-        return (bonded)=>{this.onBond(bonded,bounds, index, octetException); this.props.onBond(octetException?{1:bonded, 5:index}:{1:bonded, 3:index}, bonded)}
+        return (bonded)=>{if(!atoms[bonded].center) { return }; this.onBond(bonded,bounds, index, octetException); this.props.onBond(octetException?{1:bonded, 5:index}:{1:bonded, 3:index}, bonded)}
         break;
       case 'right':
-        return (bonded)=>{this.onBond(bonded,bounds, index, octetException); this.props.onBond(octetException?{4:index, 3:bonded}:{1:index, 3:bonded}, bonded)}
+        return (bonded)=>{if(!atoms[bonded].center) { return }; this.onBond(bonded,bounds, index, octetException); this.props.onBond(octetException?{4:index, 3:bonded}:{1:index, 3:bonded}, bonded)}
         break;
     }
   }
