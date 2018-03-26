@@ -8,8 +8,6 @@ export default class extends Component {
 
     return(
       <Header>
-            <Left>
-            </Left>
             <Body>
               <Title>Lewis Model</Title>
             </Body>

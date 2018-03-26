@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PanResponder, Animated, View } from 'react-native';
-import { Button } from 'native-base';
+import { Button, Text } from 'native-base';
 import Linear from './LinearMolecule';
 import TrigonalPlanar from './TrigonalPlanar';
 import Tetrahedral from './Tetrahedral';
@@ -43,11 +43,6 @@ export default class ThreeDCanvas extends Component {
     const { centerAtom, bondedAtoms } = this.props.viewScope;
     const { closeModal } = this.props
 
-    const bonded = bondedAtoms.reduce((a,v) =>{
-      if(v) return [...a, ...v];
-      else return a
-    }, [])
-
     const totalBonds = centerAtom.bonds.reduce((a,v) => a+v, 0)
     const lonePairElectrons = centerAtom.vale - totalBonds
 
@@ -79,21 +74,32 @@ export default class ThreeDCanvas extends Component {
         break
     }
 
+    renderLegendItem = ({symbol, color}, k=-1, array=null) => {
+      if(array && array.map(v=>v.color).indexOf(color) !== k) return;
+      return (
+        <View key={k} style={{flexDirection:'row', alignItems:'center', justifyContent:'center', width:'100%', position:'relative'}}>
+          <View style={{backgroundColor:color, borderRadius:5, width:10, height:10, borderWidth:.3 }}/>
+          <Text>{symbol}</Text>
+        </View>
+      )
+    }
+
     return (
       <Animated.View style={{flex:1}} {...this.panResponder.panHandlers}>
-        <Molecule
-        pan={this.state.pan}
-        center={ centerAtom }
-        bonded={ bonded }
-        />
+        <Molecule pan={this.state.pan} center={ centerAtom } bonded={ bondedAtoms } />
+
+        <View style={{position:'absolute', bottom:70, right:0, width:40, zIndex:-1, height:'100%', justifyContent:'flex-end'}} >
+          {renderLegendItem(centerAtom)}
+          {bondedAtoms.map(renderLegendItem)}
+        </View>
 
         <Button
         onPress={()=>closeModal()}
-        style={{position:'absolute', bottom:0, left:0, right:0}}
-        title="Back to 2D"/>
+        style={{position:'absolute', bottom:0, left:0, right:0}}>
+          <Text>Back To 2D</Text>
+        </Button>
       </Animated.View>
     )
-
   }
 
 }

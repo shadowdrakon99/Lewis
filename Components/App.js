@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, StatusBar, Animated, Modal as Mod, Dimensions } from 'react-native';
+import { StyleSheet, View, StatusBar, Animated, Modal as Mod, Dimensions } from 'react-native';
+import { Button, Text } from 'native-base';
 import Canvas from './2DCanvas';
 import Header from './header'
 import { Container, Icon } from 'native-base';
@@ -7,14 +8,9 @@ import Modal from "./Modal"
 import IBox from './IconBox'
 import Tape from './TapeMeasure'
 import ThreeDMolecule from './3DCanvas'
+import elements from '../lib/elements';
 
-const elements = [
-  {symbol:'H', vale:1},
-  {symbol:'C', vale:4},
-  {symbol:'N', vale:5},
-  {symbol:'O', vale:6},
-  {symbol:'F', vale:7},
-]
+const elementsDisplay = ['H','C','N','O','F']
 
 export default class App extends Component {
 
@@ -61,8 +57,8 @@ export default class App extends Component {
   }
 
   renderButtons() {
-    return elements.map((e,k) =>
-      <Button style={styles.elementButton} onPress={()=>this.spawnAtom(e)} title={e.symbol} key={k}/>
+    return elements.filter(e=>elementsDisplay.includes(e.symbol)).map((e,k) =>
+      <Button full rounded style={{flex:1, margin:2 }} onPress={()=>this.spawnAtom(e)} key={k}><Text>{e.symbol}</Text></Button>
     )
   }
 
@@ -142,7 +138,7 @@ export default class App extends Component {
     const bondedAtoms = this.state.bonds
     .filter(b=>Object.values(b).indexOf(index)!==-1)
     .map(b=>{
-      const domains = Object.keys(b)
+      const domains = Object.keys(b).map(v=>parseInt(v))
       const atoms = Object.values(b)
       const isFirst = atoms[0]===index
       return {
@@ -152,7 +148,7 @@ export default class App extends Component {
     })
 
     if(bondedAtoms.filter(atom=>atom.bonds.filter(b=>b===0).length<3).length!==0) {
-      alert('3D views of molecules with more than one center atom are not yet supported. Please drag with your finger on the only center atom.')
+      alert('Please drag with your finger on the only center atom.')
       return
     }
 
@@ -169,7 +165,7 @@ export default class App extends Component {
         <Mod animationType="slide"  transparent={false} visible={this.state.threeD} onRequestClose={()=>this.setState({threeD:false})}><ThreeDMolecule closeModal={()=>this.setState({threeD:false})} viewScope={threeDViewScope} /></Mod>
         <View style={{position:'absolute', top:0, left:0, right:0, zIndex:1}} >
           <Header onMenuPress = {this.openModal.bind(this)} />
-          <View style={{flexDirection:'row', justifyContent: 'space-between'}} >
+          <View style={{flexDirection:'row', width:'100%'}} >
             {this.renderButtons()}
           </View>
         </View>
@@ -180,11 +176,3 @@ export default class App extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  elementButton:{
-    backgroundColor:'#4988ed',
-    padding:10,
-    width:20,
-  }
-})

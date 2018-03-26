@@ -4,6 +4,8 @@ import {Text, View } from 'react-native';
 import * as THREE from "three";
 import ExpoTHREE from "expo-three";
 
+import makeBallAndStick from '../lib/makeBallAndStick';
+
 export default class extends Component {
 
   _onGLContextCreate = async gl => {
@@ -14,40 +16,19 @@ export default class extends Component {
     const renderer = ExpoTHREE.createRenderer({ gl });
     renderer.setSize(gl.drawingBufferWidth, gl.drawingBufferHeight);
 
-
-    makeBallAndStick = ({color}, rx, ry, rz) => {
-      const material = new THREE.MeshPhongMaterial({ color });
-      let ballAndStickGeometry = new THREE.Geometry();
-      const ballGeometry = new THREE.SphereGeometry( 3, 32, 32 );
-      const stickGeometry = new THREE.CylinderGeometry(1, 1, 5, 24, 20);
-      let ballMesh = new THREE.Mesh(ballGeometry, material);
-      let stickMesh = new THREE.Mesh(stickGeometry, material);
-      ballMesh.position.set(0,8,0);
-      stickMesh.position.set(0,4,0);
-
-      ballAndStickGeometry.mergeMesh(ballMesh)
-      ballAndStickGeometry.mergeMesh(stickMesh)
-
-      let ballAndStickMesh = new THREE.Mesh(ballAndStickGeometry, material)
-
-      if(rx) ballAndStickMesh.rotateX(rx)
-      if(ry) ballAndStickMesh.rotateY(ry)
-      if(rz) ballAndStickMesh.rotateZ(rz)
-
-      return ballAndStickMesh
-    }
-
     var geometrySphere = new THREE.SphereGeometry( 3, 32, 32 );
-    var materialSphere = new THREE.MeshPhongMaterial( {color: '#40e0d0'} );
+    var materialSphere = new THREE.MeshPhongMaterial( {color: this.props.center.color} );
     var sphere = new THREE.Mesh( geometrySphere, materialSphere);
 
     let group = new THREE.Group();
     let directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
 
-    group.add(makeBallAndStick({color: "#4286f4"},0,0,-1.9111355))
-    group.add(makeBallAndStick({color: "#4286f4"},0, 2.09599366,-1.9111355))
-    group.add(makeBallAndStick({color: "#4286f4"},0, -2.09599366, -1.9111355))
-    group.add(makeBallAndStick({color: "#4286f4"}))
+    const { bonded } = this.props
+
+    if(bonded[0]) group.add(makeBallAndStick({color: bonded[0].color},0,0,-1.9111355))
+    if(bonded[1]) group.add(makeBallAndStick({color: bonded[1].color},0, 2.09599366,-1.9111355))
+    if(bonded[2]) group.add(makeBallAndStick({color: bonded[2].color},0, -2.09599366, -1.9111355))
+    if(bonded[3]) group.add(makeBallAndStick({color: bonded[3].color}))
     group.add(sphere);
 
     scene.add( directionalLight );
